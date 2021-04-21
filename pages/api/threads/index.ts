@@ -91,6 +91,9 @@ export class TextileClient {
 };
 
 export default async function threadsHandler(req, res) {
-    const client = await new TextileClient().init();
-    res.status(200).json({ message: 'Hello World!' });
+    if (req.method === "GET") {
+        const client = await new TextileClient().init();
+        const dbs = await listDBs(client);
+        res.status(200).json(dbs);
+    }
 };

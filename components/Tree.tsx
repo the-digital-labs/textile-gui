@@ -1,23 +1,17 @@
+import { useContext } from "react";
 import styles from "../styles/components/Tree.module.css";
 import { Tree as AntTree } from "antd";
+import { ThreadsContext } from "../store/threads";
 
 export default function Tree({ treeData = [] }) {
+    const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
 
     const onSelect = (selectedKeys: React.Key[], info: any) => {
-        console.log('selected', selectedKeys, info);
-    };
-
-    const onCheck = (checkedKeys: React.Key[], info: any) => {
-        console.log('onCheck', checkedKeys, info);
+        info.selectedNodes[0].onClick();
     };
 
     return <AntTree
-        checkable
-        defaultExpandedKeys={['0-0-0', '0-0-1']}
-        defaultSelectedKeys={['0-0-0', '0-0-1']}
-        defaultCheckedKeys={['0-0-0', '0-0-1']}
         onSelect={onSelect}
-        onCheck={onCheck}
         treeData={treeData}
         style={{ height: "100%" }}
     />

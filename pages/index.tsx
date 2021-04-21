@@ -12,9 +12,43 @@ export default function Home() {
 
   console.log(threadsCtxState, threadsCtxActions);
 
+  function fetchThreads() {
+    fetch("api/threads").then(resp => resp.json().then(json => {
+      console.log(json);
+      json.forEach(thread => {
+        thread.key = thread.id;
+        thread.title = thread.name;
+        thread.onClick = () => threadsCtxActions.setSelectedThread(thread);
+      });
+      json = [{ title: "Threads", key: "threads", disableCheckbox: true, children: json }]
+      threadsCtxActions.setDatabases(json);
+    }));
+  };
+
+  function fetchCollections(threadID) {
+    fetch(`api/threads/collections/?threadID=${threadID}`).then(resp => resp.json().then(json => {
+      console.log(json);
+      json.forEach(collection => {
+        collection.key = collection.id;
+        collection.title = collection.name;
+      });
+      threadsCtxActions.setCollections(json);
+    }));
+  };
+
+  function fetchInstances(threadID, collectionName) {
+    fetch(`api/threads/instances/?threadID=${threadID}&collectionName=${collectionName}`).then(resp => resp.json().then(json => {
+      console.log(json);
+      json.forEach(instance => {
+        instance.key = instance.id;
+      });
+      threadsCtxActions.setInstances(json);
+    }));
+  };
+
   useEffect(() => {
-    fetch("api/threads").then(resp => resp.json().then(json => console.log(json)));
-  }, [])
+
+  }, []);
 
   return (
     <>
@@ -24,12 +58,15 @@ export default function Home() {
       <TopBar />
       <Row>
         <Col flex={"250px"}>
-          <SideBar />
+          <SideBar treeData={threadsCtxState.databases} />
         </Col>
         <Col flex="auto">
           <Table />
         </Col>
       </Row>
+      <button onClick={() => fetchThreads()}>threads</button>
+      <button onClick={() => fetchCollections(threadsCtxState.selectedThread.id)}>collections</button>
+      <button onClick={() => fetchInstances(threadsCtxState.selectedThread?.id, threadsCtxState.selectedCollection?.id)}>instances</button>
     </>
   );
 };
