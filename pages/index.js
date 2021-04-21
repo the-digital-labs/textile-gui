@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Table from "../components/Table";
@@ -12,6 +12,10 @@ export default function Home() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
 
   console.log(threadsCtxState, threadsCtxActions);
+
+  useEffect(() => {
+    fetch("api/threads").then(resp => resp.json().then(json => console.log(json)));
+  }, [])
 
   return (
     <div>
