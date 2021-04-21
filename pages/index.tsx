@@ -10,7 +10,7 @@ import { ThreadsContext } from "../store/threads";
 export default function Home() {
   const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
 
-  console.log(threadsCtxState, threadsCtxActions);
+  console.log(threadsCtxState);
 
   function fetchThreads() {
     fetch("api/threads").then(resp => resp.json().then(json => {
@@ -20,18 +20,22 @@ export default function Home() {
         thread.title = thread.name;
         thread.onClick = () => threadsCtxActions.setSelectedThread(thread);
       });
-      json = [{ title: "Threads", key: "threads", disableCheckbox: true, children: json }]
-      threadsCtxActions.setDatabases(json);
+      const treeData = [{ title: "Threads", key: "threads", disableCheckbox: true, children: json }]
+      threadsCtxActions.setTreeData(treeData);
+      threadsCtxActions.setThreads(json);
     }));
   };
 
   function fetchCollections(threadID) {
     fetch(`api/threads/collections/?threadID=${threadID}`).then(resp => resp.json().then(json => {
       console.log(json);
-      json.forEach(collection => {
-        collection.key = collection.id;
+      json.forEach((collection, index) => {
+        collection.key = index;
         collection.title = collection.name;
+        collection.onClick = () => threadsCtxActions.setSelectedCollection(collection);
       });
+      const newTree = mergeTrees(threadsCtxState.threads, threadsCtxState.selectedThread, json);
+      threadsCtxActions.setTreeData(newTree);
       threadsCtxActions.setCollections(json);
     }));
   };
@@ -46,6 +50,33 @@ export default function Home() {
     }));
   };
 
+  function mergeTrees(threads, selectedThread, collections) {
+    threads.forEach(thread => {
+      if (thread.id === selectedThread.id) {
+        console.log("asdjhfbaskjhdfb")
+        thread.children = collections;
+      }
+    })
+    return threads;
+  }
+
+  function getColumns(instances) {
+    let columns = [];
+    let columnTypes = {};
+    instances.forEach(instance => {
+      columnTypes = { ...columnTypes, ...Object.keys(instance) };
+    });
+    Object.values(columnTypes).forEach(type => {
+      columns.push({
+        title: type,
+        dataIndex: type,
+        key: type,
+        ellipsis: true
+      });
+    })
+    return columns;
+  }
+
   useEffect(() => {
 
   }, []);
@@ -58,15 +89,17 @@ export default function Home() {
       <TopBar />
       <Row>
         <Col flex={"250px"}>
-          <SideBar treeData={threadsCtxState.databases} />
+          <SideBar treeData={threadsCtxState.treeData} />
         </Col>
-        <Col flex="auto">
-          <Table />
+        <Col flex="min-content">
+          <Table columns={threadsCtxState.instances.length > 0 ? getColumns(threadsCtxState.instances) : []}
+            data={threadsCtxState.instances.length > 0 ? threadsCtxState.instances : []}
+          />
         </Col>
       </Row>
       <button onClick={() => fetchThreads()}>threads</button>
       <button onClick={() => fetchCollections(threadsCtxState.selectedThread.id)}>collections</button>
-      <button onClick={() => fetchInstances(threadsCtxState.selectedThread?.id, threadsCtxState.selectedCollection?.id)}>instances</button>
+      <button onClick={() => fetchInstances(threadsCtxState.selectedThread?.id, threadsCtxState.selectedCollection?.name)}>instances</button>
     </>
   );
 };

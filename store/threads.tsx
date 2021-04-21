@@ -1,25 +1,27 @@
 import { useReducer, createContext } from "react";
 
 const initialState = {
-    databases: [],
+    threads: [],
     collections: [],
     instances: [],
     selectedThread: null,
-    selectedCollection: null
+    selectedCollection: null,
+    treeData: []
 };
 
 const actionTypes = {
-    SET_DATABASES: "SET_DATABASES",
+    SET_THREADS: "SET_THREADS",
     SET_COLLECTIONS: "SET_COLLECTIONS",
     SET_INSTANCES: "SET_INSTANCES",
     SET_SELECTED_THREAD: "SET_SELECTED_THREAD",
-    SET_SELECTED_COLLECTION: "SET_SELECTED_COLLECTION"
+    SET_SELECTED_COLLECTION: "SET_SELECTED_COLLECTION",
+    SET_TREE_DATA: "SET_TREE_DATA"
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case actionTypes.SET_DATABASES: {
-            return { ...state, databases: action.payload.databases };
+        case actionTypes.SET_THREADS: {
+            return { ...state, threads: action.payload.threads };
         };
         case actionTypes.SET_COLLECTIONS: {
             return { ...state, collections: action.payload.collections };
@@ -33,6 +35,9 @@ const reducer = (state, action) => {
         case actionTypes.SET_SELECTED_COLLECTION: {
             return { ...state, selectedCollection: action.payload.selectedCollection };
         };
+        case actionTypes.SET_TREE_DATA: {
+            return { ...state, treeData: action.payload.treeData };
+        };
         default: {
             throw new Error('Unexpected action');
         };
@@ -45,10 +50,10 @@ export function ThreadsProvider({ children }) {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const actions = {
-        setDatabases: (newDatabases) => dispatch({
-            type: actionTypes.SET_DATABASES,
+        setThreads: (threads) => dispatch({
+            type: actionTypes.SET_THREADS,
             payload: {
-                databases: newDatabases
+                threads: threads
             }
         }),
         setCollections: (newCollections) => dispatch({
@@ -78,6 +83,14 @@ export function ThreadsProvider({ children }) {
                 type: actionTypes.SET_SELECTED_COLLECTION,
                 payload: {
                     selectedCollection: collection
+                }
+            })
+        },
+        setTreeData: (treeData) => {
+            dispatch({
+                type: actionTypes.SET_TREE_DATA,
+                payload: {
+                    treeData: treeData
                 }
             })
         }
