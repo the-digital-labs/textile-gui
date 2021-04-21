@@ -1,33 +1,45 @@
-import React, { useState } from "react";
 import styles from "../styles/components/SideBar.module.css";
-import { Menu, Button } from 'antd';
-import {
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    PieChartOutlined,
-    DesktopOutlined,
-    ContainerOutlined,
-} from '@ant-design/icons';
+import { Collapse } from 'antd';
+import Tree from "./Tree";
 
-export default function SideBar({ isOpen, setIsSideBarOpen }) {
-    return <div>
-        <Button type="primary" onClick={() => setIsSideBarOpen(!isOpen)} style={{ width: "100%" }}>
-            {React.createElement(isOpen ? MenuUnfoldOutlined : MenuFoldOutlined)}
-        </Button>
-        <Menu
-            defaultSelectedKeys={['1']}
-            mode="inline"
-            inlineCollapsed={!isOpen}
-        >
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
-                Option 1
-            </Menu.Item>
-            <Menu.Item key="2" icon={<DesktopOutlined />}>
-                Option 2
-            </Menu.Item>
-            <Menu.Item key="3" icon={<ContainerOutlined />}>
-                Option 3
-            </Menu.Item>
-        </Menu>
-    </div>
+const { Panel } = Collapse;
+
+export default function SideBar() {
+    const treeData = [
+        {
+            title: 'parent 1',
+            key: '0-0',
+            children: [
+                {
+                    title: 'parent 1-0',
+                    key: '0-0-0',
+                    disabled: true,
+                    children: [
+                        {
+                            title: 'leaf',
+                            key: '0-0-0-0',
+                            disableCheckbox: true,
+                        },
+                        {
+                            title: 'leaf',
+                            key: '0-0-0-1',
+                        },
+                    ],
+                },
+                {
+                    title: 'parent 1-1',
+                    key: '0-0-1',
+                    children: [{ title: <span style={{ color: '#1890ff' }}>sss</span>, key: '0-0-1-0' }],
+                },
+            ],
+        },
+    ];
+
+    return (
+        <Collapse defaultActiveKey={['1']}>
+            <Panel header="Tree Explorer" key="1">
+                <Tree treeData={treeData} />
+            </Panel>
+        </Collapse>
+    );
 };
