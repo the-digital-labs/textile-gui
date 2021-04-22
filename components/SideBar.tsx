@@ -1,15 +1,27 @@
+import { useContext } from "react";
 import styles from "../styles/components/SideBar.module.css";
-import { Collapse } from 'antd';
+import { Collapse, Spin } from 'antd';
 import Tree from "./Tree";
+import { AppContext } from "../store/app";
 
 const { Panel } = Collapse;
 
-export default function SideBar({ treeData }) {
+export default function SideBar({ treeData, buildTree }) {
+    const [appCtxState, appCtxActions] = useContext(AppContext);
+
     return (
-        <Collapse defaultActiveKey={['1']}>
+        <Collapse onChange={buildTree}>
             <Panel header="Tree Explorer" key="1">
-                <Tree treeData={treeData} />
+                {
+                    appCtxState.isTreeLoading &&
+                    <div className={styles.spinnerContainer}>
+                        <Spin />
+                    </div>
+                }
+                {
+                    !appCtxState.isTreeLoading && <Tree treeData={treeData} />
+                }
             </Panel>
-        </Collapse>
+        </Collapse >
     );
 };

@@ -1,9 +1,12 @@
 import { ThreadsProvider } from "./threads";
+import { AppProvider } from "./app";
 
 export function StoreProvider({ children }) {
     return (
-        <ThreadsProvider>
-            {children}
-        </ThreadsProvider>
+        <AppProvider>
+            <ThreadsProvider>
+                {children}
+            </ThreadsProvider>
+        </AppProvider>
     )
 }
