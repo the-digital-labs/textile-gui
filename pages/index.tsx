@@ -13,6 +13,7 @@ export default function Home() {
   const [appCtxState, appCtxActions] = useContext(AppContext);
 
   async function buildTree() {
+    appCtxActions.setIsTableLoading(true);
     appCtxActions.setIsTreeLoading(true);
     let threadsCounter = 0;
     const threadsResponse = await fetch("api/threads");
@@ -37,6 +38,7 @@ export default function Home() {
               const treeData = [{ title: "Threads", key: '0-0', children: threads }];
               threadsCtxActions.setTreeData(treeData);
               appCtxActions.setIsTreeLoading(false);
+              appCtxActions.setIsTableLoading(false);
             }
           });
         } else {
@@ -49,12 +51,14 @@ export default function Home() {
   };
 
   function fetchInstances(threadID, collectionName) {
+    appCtxActions.setIsTableLoading(true);
     fetch(`api/threads/instances/?threadID=${threadID}&collectionName=${collectionName}`).then(resp => resp.json().then(json => {
       console.log("instances", json);
       json.forEach((instance, index) => {
         instance.key = index;
       });
       threadsCtxActions.setInstances(json);
+      appCtxActions.setIsTableLoading(false);
     }));
   };
 

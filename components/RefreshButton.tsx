@@ -11,6 +11,6 @@ export default function SideBar({ buildTree }) {
     };
 
     return (
-        <Button loading={appCtxState.isTreeLoading} onClick={handleClick} icon={<ReloadOutlined />} style={{"float": "right"}}/>
+        <Button loading={appCtxState.isTreeLoading} onClick={handleClick} icon={<ReloadOutlined />} style={{ "float": "right" }} />
     );
 };
