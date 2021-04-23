@@ -11,6 +11,7 @@ Example `config.js`:
 ```
 export const HUB_KEY = "yourkeyhere";
 export const HUB_SECRET = "yoursecretkeyhere";
+export const DARK_MODE = true; // toggle for light / dark mode UI.
 ```
 
 For information on how to create a Textile account and get your API keys, visit: https://docs.textile.io/hub/apis/
