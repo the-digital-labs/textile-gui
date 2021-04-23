@@ -8,7 +8,7 @@ export default function App({ Component, pageProps }) {
 
   useEffect(() => {
     if (DARK_MODE) {
-      import("../styles/antd.dark.css");
+      import("../styles/antd.dark.min.css");
     }
   }, [])
 
