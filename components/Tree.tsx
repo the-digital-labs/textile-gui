@@ -11,5 +11,6 @@ export default function Tree({ treeData = [] }) {
         treeData={treeData}
         style={{ height: "100%" }}
         showLine={true}
+        defaultExpandAll={true}
     />
 };
