@@ -29,7 +29,7 @@ Remember these keys are private, so do not commit your `config.js` to a public r
 - Querying threads, buckets, collections and instances in UI. (functional) ✔️
 - Dark and Light mode UI. (functional) ✔️
 - Editing Instances in Table Row UI. (in progress) 🚧
-- Table column filtering. (no progress) ❌
+- Table column filtering. (functional) ✔️
 - Search bar. (no progress) ❌
 - Export collections and instances to a JSON file for download. (no progress) ❌
 - Edit schemas in the UI. (no progress) ❌
