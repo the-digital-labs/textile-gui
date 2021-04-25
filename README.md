@@ -1,5 +1,7 @@
 # textile-gui
-Web frontend for querying and interacting with Textile threads and buckets. Aiming to make a simple management interface without needing to use the CLI.
+Web frontend for querying and interacting with [Textile](https://www.textile.io/) threads and buckets. Aiming to make a simple management interface without needing to use the CLI.
+
+#### Project Stage: Alpha
 
 ## Get Started
 
@@ -21,3 +23,37 @@ Remember these keys are private, so do not commit your `config.js` to a public r
 2. Run: `npm run dev` in your terminal to start the [NextJS](https://nextjs.org/) webserver.
 
 3. Open: `http://localhost:3000` in your browser.
+
+## Features and Roadmap
+
+- Querying threads, buckets, collections and instances in UI. (functional) ✔️
+- Dark and Light mode UI. (functional) ✔️
+- Editing Instances in Table Row UI. (in progress) 🚧
+- Table column filtering. (no progress) ❌
+- Search bar. (no progress) ❌
+- Export collections and instances to a JSON file for download. (no progress) ❌
+- Edit schemas in the UI. (no progress) ❌
+- Delete threads, buckets, collections and instances in UI. (no progress) ❌
+- Import JSON files as data. (no progress) ❌
+- Upload KEY and SECRET_KEY from UI. Create settings UI to replace `config.js`. (no progress) ❌
+
+## Technologies
+
+[NextJS](https://nextjs.org/)
+
+[React](https://reactjs.org/)
+
+[Textile](https://www.textile.io/)
+
+[Ant Design](https://ant.design/)
+
+[Filecoin](https://filecoin.io/)
+
+[IPFS](https://ipfs.io/)
+
+## App UI Example
+
+![Screenshot from 2021-04-23 00-45-57](https://user-images.githubusercontent.com/27584221/115837341-fe1d6e00-a407-11eb-99f5-5411565875cb.png)
+
+A Free and Open Source project from: [The Digital Labs](https://github.com/the-digital-labs)
+
