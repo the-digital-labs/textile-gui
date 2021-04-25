@@ -53,7 +53,8 @@ Remember these keys are private, so do not commit your `config.js` to a public r
 
 ## App UI Example
 
-![Screenshot from 2021-04-23 00-45-57](https://user-images.githubusercontent.com/27584221/115837341-fe1d6e00-a407-11eb-99f5-5411565875cb.png)
+![ui](https://user-images.githubusercontent.com/27584221/115983138-00f69b00-a58f-11eb-90cf-c56daab970ab.png)
+
 
 A Free and Open Source project from: [The Digital Labs](https://github.com/the-digital-labs)
 
