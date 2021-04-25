@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { AppContext } from "../store/app";
 import { ReloadOutlined } from '@ant-design/icons';
 
@@ -11,6 +11,8 @@ export default function SideBar({ buildTree }) {
     };
 
     return (
-        <Button loading={appCtxState.isTreeLoading} onClick={handleClick} icon={<ReloadOutlined />} style={{ "float": "right" }} />
+        <Tooltip title="refresh data">
+            <Button loading={appCtxState.isTreeLoading} onClick={handleClick} icon={<ReloadOutlined />} style={{ "float": "right" }} />
+        </Tooltip>
     );
 };
