@@ -68,12 +68,13 @@ export default function Home() {
     instances.forEach(instance => {
       columnTypes = { ...columnTypes, ...Object.keys(instance) };
     });
-    Object.values(columnTypes).forEach((type, index) => {
+    Object.values(columnTypes).forEach((type: any, index: number) => {
       columns.push({
         title: type,
         dataIndex: type,
         key: index,
-        ellipsis: true
+        ellipsis: true,
+        sorter: (a, b) => a[type].toString().localeCompare(b[type].toString()),
       });
     })
     return columns;
