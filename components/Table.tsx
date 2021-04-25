@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import styles from "../styles/components/Table.module.css";
-import { Table as AntTable, Spin } from "antd";
+import { Table as AntTable, Spin, Button } from "antd";
 import { AppContext } from "../store/app";
+import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 export default function Table({ data = [], columns = [] }) {
     const [appCtxState, appCtxActions] = useContext(AppContext);
@@ -22,14 +23,21 @@ export default function Table({ data = [], columns = [] }) {
         }
         {
             !appCtxState.isTableLoading &&
-            <AntTable dataSource={data}
-                columns={columns}
-                pagination={false}
-                rowSelection={{
-                    type: "checkbox",
-                    ...rowSelection,
-                }}
-            />
+            <div>
+                <div className={styles.tableActionsBar}>
+                    <Button icon={<PlusOutlined />}>Add</Button>
+                    <Button icon={<EditOutlined />} disabled>Edit</Button>
+                    <Button icon={<DeleteOutlined />} disabled>Delete</Button>
+                </div>
+                <AntTable dataSource={data}
+                    columns={columns}
+                    pagination={false}
+                    rowSelection={{
+                        type: "checkbox",
+                        ...rowSelection,
+                    }}
+                />
+            </div>
         }
     </>
 };
