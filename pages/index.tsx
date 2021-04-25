@@ -32,7 +32,11 @@ export default function Home() {
             collectionsCounter++;
             collection.key = `0-0-${threadIndex}-${collectionIndex}`;
             collection.title = collection.name;
-            collection.onClick = () => fetchInstances(thread.id, collection.name);
+            collection.onClick = () => {
+              fetchInstances(thread.id, collection.name);
+              threadsCtxActions.setSelectedCollection(collection);
+              threadsCtxActions.setSelectedThread(thread);
+            }
             thread.children.push(collection);
             if (threadsCounter === threads.length && collectionsCounter === collections.length) {
               const treeData = [{ title: "Threads", key: '0-0', children: threads }];
@@ -78,7 +82,7 @@ export default function Home() {
       });
     })
     return columns;
-  }
+  };
 
   return (
     <>

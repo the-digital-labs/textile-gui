@@ -1,25 +1,116 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "../styles/components/Table.module.css";
-import { Table as AntTable, Spin, Button, Input } from "antd";
+import { Table as AntTable, Spin, Button, Input, InputNumber, Form } from "antd";
 import { AppContext } from "../store/app";
-import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { ThreadsContext } from "../store/threads";
+import { PlusOutlined, DeleteOutlined, EditOutlined, SaveOutlined, UndoOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 
 export default function Table({ data = [], columns = [] }) {
     const [appCtxState, appCtxActions] = useContext(AppContext);
+    const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
+
+    const [form] = Form.useForm();
+
+    const [rowData, setRowData] = useState(data);
+    const [isAdding, setIsAdding] = useState(false);
+    const [addingKey, setAddingKey] = useState('');
+
+    const isRowAdding = (record) => record.key === addingKey;
 
     const rowSelection = {
         onChange: (selectedRowKeys: React.Key[], selectedRows: []) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
         getCheckboxProps: (record) => ({
-            disabled: record.name === 'Disabled User', // Column configuration not to be checked
+            disabled: record.name === 'Disabled User',
             name: record.name,
         }),
     };
 
+    const addInstance = () => {
+        const newInstance = {};
+        columns.forEach(col => {
+            newInstance[col.dataIndex] = "";
+        });
+        newInstance.key = rowData.length;
+        newInstance.isAdding = true;
+        setRowData([newInstance, ...rowData]);
+        setIsAdding(true);
+        setAddingKey(newInstance.key);
+    };
+
+    const saveNewInstance = async () => {
+        fetch(`api/threads/instances`, {
+            method: "POST", body: JSON.stringify({
+                params: {
+                    collectionName: threadsCtxState.selectedCollection.name,
+                    threadName: threadsCtxState.selectedThread.name
+                },
+                instance: {
+                    ...form.getFieldsValue(true),
+                    dateCreated: Date.now(),
+                    receipt: {},
+                }
+            })
+        }).then(resp => resp.json().then(json => {
+            console.log("newInstance", json);
+        }));
+    };
+
+    const undoNewInstance = () => {
+        const newRows = rowData.filter(row => !row.isAdding);
+        setRowData(newRows);
+        setIsAdding(false);
+    };
+
     const onSearch = value => console.log(value);
+
+    useEffect(() => {
+        setRowData(data);
+    }, [data])
+
+    const mergedColumns = columns.map((col) => {
+        return {
+            ...col,
+            onCell: (record) => ({
+                record,
+                col,
+                isAdding: isRowAdding(col),
+            }),
+        };
+    });
+
+    const handleCellChange = (e) => {
+        form.setFieldsValue({ [e.target.name]: e.target.value });
+    };
+
+    const EditableCell = ({ isAdding, ...props }) => {
+        const inputNode = <Input onChange={handleCellChange} name={props.col?.dataIndex} />;
+        return (
+            <td {...props}>
+                {props.record?.isAdding ? (
+                    <Form.Item
+                        name={props.col?.dataIndex}
+                        style={{
+                            margin: 0,
+                        }}
+                        rules={[
+                            {
+                                required: true,
+                                message: `Please Input ${props.title}!`,
+                            },
+                        ]}
+                    >
+                        {inputNode}
+                    </Form.Item>
+                ) : (
+                    props.children
+                )}
+            </td>
+        );
+    };
 
     return <>
         {
@@ -29,19 +120,34 @@ export default function Table({ data = [], columns = [] }) {
             !appCtxState.isTableLoading &&
             <div>
                 <div className={styles.tableActionsBar}>
-                    <Button icon={<PlusOutlined />}>Add</Button>
+                    {
+                        !isAdding && <Button icon={<PlusOutlined />} onClick={addInstance}>Add</Button>
+                    }
+                    {
+                        isAdding && <Button icon={<SaveOutlined />} onClick={saveNewInstance}>Save</Button>
+                    }
+                    {
+                        isAdding && <Button icon={<UndoOutlined />} onClick={undoNewInstance}>Undo</Button>
+                    }
                     <Button icon={<EditOutlined />} disabled>Edit</Button>
                     <Button icon={<DeleteOutlined />} disabled>Delete</Button>
                     <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200, float: "right" }} />
                 </div>
-                <AntTable dataSource={data}
-                    columns={columns}
-                    pagination={false}
-                    rowSelection={{
-                        type: "checkbox",
-                        ...rowSelection,
-                    }}
-                />
+                <Form form={form} component={false}>
+                    <AntTable dataSource={rowData}
+                        columns={mergedColumns}
+                        pagination={false}
+                        rowSelection={{
+                            type: "checkbox",
+                            ...rowSelection,
+                        }}
+                        components={{
+                            body: {
+                                cell: EditableCell,
+                            },
+                        }}
+                    />
+                </Form>
             </div>
         }
     </>
