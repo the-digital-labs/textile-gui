@@ -1,8 +1,10 @@
 import { useContext } from "react";
 import styles from "../styles/components/Table.module.css";
-import { Table as AntTable, Spin, Button } from "antd";
+import { Table as AntTable, Spin, Button, Input } from "antd";
 import { AppContext } from "../store/app";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+
+const { Search } = Input;
 
 export default function Table({ data = [], columns = [] }) {
     const [appCtxState, appCtxActions] = useContext(AppContext);
@@ -17,6 +19,8 @@ export default function Table({ data = [], columns = [] }) {
         }),
     };
 
+    const onSearch = value => console.log(value);
+
     return <>
         {
             appCtxState.isTableLoading && <div style={{ display: "flex", justifyContent: "center", height: "100%" }}><Spin style={{ alignSelf: "center" }} size="large" /></div>
@@ -28,6 +32,7 @@ export default function Table({ data = [], columns = [] }) {
                     <Button icon={<PlusOutlined />}>Add</Button>
                     <Button icon={<EditOutlined />} disabled>Edit</Button>
                     <Button icon={<DeleteOutlined />} disabled>Delete</Button>
+                    <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200, float: "right" }} />
                 </div>
                 <AntTable dataSource={data}
                     columns={columns}
