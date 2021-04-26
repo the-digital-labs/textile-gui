@@ -42,21 +42,26 @@ export default function Table({ data = [], columns = [] }) {
     };
 
     const saveNewInstance = async () => {
-        fetch(`api/threads/instances`, {
-            method: "POST", body: JSON.stringify({
-                params: {
-                    collectionName: threadsCtxState.selectedCollection.name,
-                    threadName: threadsCtxState.selectedThread.name
-                },
-                instance: {
-                    ...form.getFieldsValue(true),
-                    dateCreated: Date.now(),
-                    receipt: {},
-                }
-            })
-        }).then(resp => resp.json().then(json => {
-            console.log("newInstance", json);
-        }));
+        try {
+            await form.validateFields();
+            fetch(`api/threads/instances`, {
+                method: "POST", body: JSON.stringify({
+                    params: {
+                        collectionName: threadsCtxState.selectedCollection.name,
+                        threadName: threadsCtxState.selectedThread.name
+                    },
+                    instance: {
+                        ...form.getFieldsValue(true),
+                        dateCreated: Date.now(),
+                        receipt: {},
+                    }
+                })
+            }).then(resp => resp.json().then(json => {
+                console.log("newInstance", json);
+            }));
+        } catch (e) {
+            console.error("Required fields missing!", e);
+        }
     };
 
     const undoNewInstance = () => {
@@ -87,19 +92,19 @@ export default function Table({ data = [], columns = [] }) {
     };
 
     const EditableCell = ({ isAdding, ...props }) => {
-        const inputNode = <Input onChange={handleCellChange} name={props.col?.dataIndex} />;
+        const inputPlaceholder = props.col?.dataIndex === "_id" || props.col?.dataIndex === "_mod" || props.col?.dataIndex === "key" ? "auto-generated" : "";
+        const isDisabled = props.col?.dataIndex === "_mod" || props.col?.dataIndex === "key";
+        const isRequired = props.col?.dataIndex !== "_id" || props.col?.dataIndex !== "_mod" || props.col?.dataIndex === "key";
+        const inputNode = <Input onChange={handleCellChange} name={props.col?.dataIndex} placeholder={inputPlaceholder} disabled={isDisabled} />
         return (
             <td {...props}>
                 {props.record?.isAdding ? (
                     <Form.Item
                         name={props.col?.dataIndex}
-                        style={{
-                            margin: 0,
-                        }}
                         rules={[
                             {
-                                required: true,
-                                message: `Please Input ${props.title}!`,
+                                required: isRequired,
+                                message: `required!`,
                             },
                         ]}
                     >
@@ -121,13 +126,16 @@ export default function Table({ data = [], columns = [] }) {
             <div>
                 <div className={styles.tableActionsBar}>
                     {
-                        !isAdding && <Button icon={<PlusOutlined />} onClick={addInstance}>Add</Button>
+                        !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread && 
+                        <Button icon={<PlusOutlined />} onClick={addInstance}>Add</Button>
                     }
                     {
-                        isAdding && <Button icon={<SaveOutlined />} onClick={saveNewInstance}>Save</Button>
+                        isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread && 
+                        <Button icon={<SaveOutlined />} onClick={saveNewInstance}>Save</Button>
                     }
                     {
-                        isAdding && <Button icon={<UndoOutlined />} onClick={undoNewInstance}>Undo</Button>
+                        isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread && 
+                        <Button icon={<UndoOutlined />} onClick={undoNewInstance}>Undo</Button>
                     }
                     <Button icon={<EditOutlined />} disabled>Edit</Button>
                     <Button icon={<DeleteOutlined />} disabled>Delete</Button>
