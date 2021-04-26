@@ -14,6 +14,7 @@ export default function Table({ data = [], columns = [] }) {
     const [form] = Form.useForm();
 
     const [rowData, setRowData] = useState(data);
+    const [filteredRows, setFilteredRows] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
     const [addingKey, setAddingKey] = useState('');
 
@@ -70,7 +71,23 @@ export default function Table({ data = [], columns = [] }) {
         setIsAdding(false);
     };
 
-    const onSearch = value => console.log(value);
+    const onSearch = (searchQuery) => {
+        if (searchQuery) {
+            let newRows = [];
+            rowData.forEach(row => {
+                const values = Object.values(row);
+                for (let i = 0; i < values.length; i++) {
+                    if (values[i].toString().toLowerCase().indexOf(searchQuery.toString().toLowerCase()) !== -1) {
+                        newRows.push(row);
+                        break;
+                    }
+                }
+            })
+            setFilteredRows(newRows);
+        } else {
+            setFilteredRows(null);
+        }
+    };
 
     useEffect(() => {
         setRowData(data);
@@ -126,23 +143,23 @@ export default function Table({ data = [], columns = [] }) {
             <div>
                 <div className={styles.tableActionsBar}>
                     {
-                        !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread && 
+                        !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button icon={<PlusOutlined />} onClick={addInstance}>Add</Button>
                     }
                     {
-                        isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread && 
+                        isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button icon={<SaveOutlined />} onClick={saveNewInstance}>Save</Button>
                     }
                     {
-                        isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread && 
+                        isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button icon={<UndoOutlined />} onClick={undoNewInstance}>Undo</Button>
                     }
                     <Button icon={<EditOutlined />} disabled>Edit</Button>
                     <Button icon={<DeleteOutlined />} disabled>Delete</Button>
-                    <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200, float: "right" }} />
+                    <Search placeholder="search" onSearch={onSearch} onChange={(e) => onSearch(e.target.value)} style={{ width: 200, float: "right" }} />
                 </div>
                 <Form form={form} component={false}>
-                    <AntTable dataSource={rowData}
+                    <AntTable dataSource={filteredRows || rowData}
                         columns={mergedColumns}
                         pagination={false}
                         rowSelection={{
