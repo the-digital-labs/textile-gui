@@ -50,7 +50,7 @@ export default function Table({ data = [], columns = [] }) {
             fetch(`api/threads/instances`, {
                 method: "POST", body: JSON.stringify({
                     collectionName: threadsCtxState.selectedCollection.name,
-                    threadName: threadsCtxState.selectedThread.id,
+                    threadID: threadsCtxState.selectedThread.id,
                     instance: {
                         ...form.getFieldsValue(true),
                         dateCreated: Date.now(),
@@ -127,7 +127,7 @@ export default function Table({ data = [], columns = [] }) {
     const EditableCell = ({ isAdding, ...props }) => {
         const inputPlaceholder = props.col?.dataIndex === "_id" || props.col?.dataIndex === "_mod" || props.col?.dataIndex === "key" ? "auto-generated" : "";
         const isDisabled = props.col?.dataIndex === "_mod" || props.col?.dataIndex === "key";
-        const isRequired = props.col?.dataIndex !== "_id" || props.col?.dataIndex !== "_mod" || props.col?.dataIndex === "key";
+        const isRequired = props.col?.dataIndex !== "_id" && props.col?.dataIndex !== "_mod" && props.col?.dataIndex !== "key";
         const inputNode = <Input onChange={handleCellChange} name={props.col?.dataIndex} placeholder={inputPlaceholder} disabled={isDisabled} />
         return (
             <td {...props}>
