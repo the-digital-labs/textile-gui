@@ -47,19 +47,24 @@ export default function Table({ data = [], columns = [] }) {
     const saveNewInstance = async () => {
         try {
             await form.validateFields();
-            fetch(`api/threads/instances`, {
+            const newInstance = {
+                ...form.getFieldsValue(true),
+                dateCreated: Date.now(),
+                receipt: {},
+            }
+            const resp = await fetch(`api/threads/instances`, {
                 method: "POST", body: JSON.stringify({
                     collectionName: threadsCtxState.selectedCollection.name,
                     threadID: threadsCtxState.selectedThread.id,
-                    instance: {
-                        ...form.getFieldsValue(true),
-                        dateCreated: Date.now(),
-                        receipt: {},
-                    }
+                    instance: newInstance
                 })
-            }).then(resp => resp.json().then(json => {
-                console.log("newInstance", json);
-            }));
+            })
+            if (resp.ok) {
+                const newID = await resp.json();
+                setRowData([{ _id: newID, key: addingKey, ...newInstance }, ...rowData.filter(row => row.key !== addingKey)]);
+                setIsAdding(false);
+                setAddingKey(null);
+            }
         } catch (e) {
             console.error("Required fields missing!", e);
         }
