@@ -144,18 +144,18 @@ export default function Table({ data = [], columns = [] }) {
                 <div className={styles.tableActionsBar}>
                     {
                         !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button icon={<PlusOutlined />} onClick={addInstance}>Add</Button>
+                        <Button className={styles.actionButton} icon={<PlusOutlined />} onClick={addInstance}>Add</Button>
                     }
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button icon={<SaveOutlined />} onClick={saveNewInstance}>Save</Button>
+                        <Button className={styles.actionButton} icon={<SaveOutlined />} onClick={saveNewInstance}>Save</Button>
                     }
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button icon={<UndoOutlined />} onClick={undoNewInstance}>Undo</Button>
+                        <Button className={styles.actionButton} icon={<UndoOutlined />} onClick={undoNewInstance}>Undo</Button>
                     }
-                    <Button icon={<EditOutlined />} disabled>Edit</Button>
-                    <Button icon={<DeleteOutlined />} disabled>Delete</Button>
+                    <Button className={styles.actionButton} icon={<EditOutlined />} disabled>Edit</Button>
+                    <Button className={styles.actionButton} icon={<DeleteOutlined />} disabled>Delete</Button>
                     <Search placeholder="search" onSearch={onSearch} onChange={(e) => onSearch(e.target.value)} style={{ width: 200, float: "right" }} />
                 </div>
                 <Form form={form} component={false}>
