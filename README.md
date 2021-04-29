@@ -54,7 +54,7 @@ Remember these keys are private, so do not commit your `config.js` to a public r
 
 ## App UI Example
 
-![ggg](https://user-images.githubusercontent.com/27584221/115983487-dc9bbe00-a590-11eb-85a0-19ae8340bf27.png)
+![cxbvxcvbxcvb](https://user-images.githubusercontent.com/27584221/116507622-748cf680-a874-11eb-8316-090585d65fbc.PNG)
 
 A Free and Open Source project from: [The Digital Labs](https://github.com/the-digital-labs)
 
