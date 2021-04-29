@@ -90,11 +90,11 @@ export default function Home() {
         <title>textile-gui</title>
       </Head>
       <TopBar />
-      <Row>
-        <Col flex={"250px"}>
+      <Row wrap={false}>
+        <Col flex="250px">
           <SideBar treeData={threadsCtxState.treeData} buildTree={buildTree} />
         </Col>
-        <Col flex="min-content">
+        <Col flex="auto">
           <Table columns={getColumns(threadsCtxState.instances)}
             data={threadsCtxState.instances}
           />
