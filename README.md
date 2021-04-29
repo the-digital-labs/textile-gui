@@ -31,6 +31,7 @@ Remember these keys are private, so do not commit your `config.js` to a public r
 - Editing Instances in Table Row UI. (in progress) 🚧
 - Table column filtering. (functional) ✔️
 - Search bar. (functional) ✔️
+- Adding new instances (functional) ✔️
 - Export collections and instances to a JSON file for download. (no progress) ❌
 - Edit schemas in the UI. (no progress) ❌
 - Delete threads, buckets, collections and instances in UI. (can delete instances) 🚧
