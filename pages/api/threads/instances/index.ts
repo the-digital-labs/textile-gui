@@ -11,10 +11,8 @@ export default async function instancesHandler(req, res) {
         const client = await new TextileClient().init();
         const json = JSON.parse(req.body);
         console.log("json", json);
-        const { collectionName, threadName } = json.params;
-        const dbs = await listDBs(client);
-        const selectedDB = dbs.find(db => db.name === threadName);
-        const newInstance = await createInstances(client, ThreadID.fromString(selectedDB.id), collectionName, [json.instance]);
+        const { collectionName, threadID, instance } = json;
+        const newInstance = await createInstances(client, ThreadID.fromString(threadID), collectionName, [instance]);
         res.status(200).json(newInstance);
     } else if (req.method === "DELETE") {
         const client = await new TextileClient().init();

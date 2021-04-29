@@ -49,10 +49,8 @@ export default function Table({ data = [], columns = [] }) {
             await form.validateFields();
             fetch(`api/threads/instances`, {
                 method: "POST", body: JSON.stringify({
-                    params: {
-                        collectionName: threadsCtxState.selectedCollection.name,
-                        threadName: threadsCtxState.selectedThread.name
-                    },
+                    collectionName: threadsCtxState.selectedCollection.name,
+                    threadName: threadsCtxState.selectedThread.id,
                     instance: {
                         ...form.getFieldsValue(true),
                         dateCreated: Date.now(),
