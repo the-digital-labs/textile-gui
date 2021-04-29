@@ -1,4 +1,4 @@
-import { TextileClient, getInstancesByQuery, createInstances, listDBs } from "../index";
+import { TextileClient, getInstancesByQuery, createInstances, listDBs, deleteInstances } from "../index";
 import { ThreadID, Query } from "@textile/hub";
 
 export default async function instancesHandler(req, res) {
@@ -16,5 +16,16 @@ export default async function instancesHandler(req, res) {
         const selectedDB = dbs.find(db => db.name === threadName);
         const newInstance = await createInstances(client, ThreadID.fromString(selectedDB.id), collectionName, [json.instance]);
         res.status(200).json(newInstance);
+    } else if (req.method === "DELETE") {
+        const client = await new TextileClient().init();
+        const json = JSON.parse(req.body);
+        const { collectionName, threadID, IDs } = json;
+        try {
+            await deleteInstances(client, ThreadID.fromString(threadID), collectionName, IDs);
+            res.status(200).json({ "message": `Successfully deleted IDs: ${IDs}` });
+        } catch (e) {
+            console.log(e);
+            res.status(500).json({ "message": `Error deleting IDs: ${IDs}` });
+        }
     }
 };

@@ -51,6 +51,10 @@ export async function getInstance<T>(client: Client, threadID: ThreadID, collect
     return instance;
 };
 
+export async function deleteInstances(client: Client, threadID: ThreadID, collectionName: string, IDs: string[]): Promise<void> {
+    return await client.delete(threadID, collectionName, IDs)
+};
+
 export async function getInstancesByQuery<T>(client: Client, threadID: ThreadID, collectionName: string, query: QueryJSON): Promise<T[]> {
     const instances: T[] = await client.find(threadID, collectionName, query);
     return instances;
