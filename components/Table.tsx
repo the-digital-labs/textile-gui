@@ -192,6 +192,8 @@ export default function Table({ data = [], columns = [] }) {
                                 cell: EditableCell,
                             },
                         }}
+                        className={styles.table}
+                        sticky={true}
                     />
                 </Form>
             </div>
