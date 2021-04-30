@@ -157,7 +157,7 @@ export default function Table({ data = [], columns = [] }) {
 
     return <>
         {
-            appCtxState.isTableLoading && <div style={{ display: "flex", justifyContent: "center", height: "100%" }}><Spin style={{ alignSelf: "center" }} size="large" /></div>
+            appCtxState.isTableLoading && <div className={styles.tableSpinnerContainer}><Spin style={{ alignSelf: "center" }} size="large" /></div>
         }
         {
             !appCtxState.isTableLoading &&

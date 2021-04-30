@@ -10,3 +10,9 @@
     height: calc(100vh - 52px - 48px);
     overflow: auto;
 }
+
+.tableSpinnerContainer {
+    display: flex;
+    justify-content: center;
+    height: calc(100vh - 48px);
+}
