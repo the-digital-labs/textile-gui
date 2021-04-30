@@ -167,7 +167,10 @@ export default function Table({ data = [], columns = [] }) {
 
     return <>
         {
-            appCtxState.isTableLoading && <div className={styles.tableSpinnerContainer}><Spin style={{ alignSelf: "center" }} size="large" /></div>
+            appCtxState.isTableLoading &&
+            <div className={styles.tableSpinnerContainer}>
+                <Spin style={{ alignSelf: "center" }} size="large" />
+            </div>
         }
         {
             !appCtxState.isTableLoading &&
@@ -196,9 +199,21 @@ export default function Table({ data = [], columns = [] }) {
                     }
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button className={styles.actionButton} icon={<UndoOutlined />} onClick={undoNewInstance}>Undo</Button>
+                        <Button
+                            className={styles.actionButton}
+                            icon={<UndoOutlined />}
+                            onClick={undoNewInstance}
+                        >
+                            Undo
+                        </Button>
                     }
-                    <Button className={styles.actionButton} icon={<EditOutlined />} disabled>Edit</Button>
+                    <Button
+                        className={styles.actionButton}
+                        icon={<EditOutlined />}
+                        disabled
+                    >
+                        Edit
+                    </Button>
                     <Button
                         className={styles.actionButton}
                         icon={<DeleteOutlined />}
@@ -208,7 +223,12 @@ export default function Table({ data = [], columns = [] }) {
                     >
                         Delete
                     </Button>
-                    <Search placeholder="search" onSearch={onSearch} onChange={(e) => onSearch(e.target.value)} style={{ width: 200, float: "right" }} />
+                    <Search
+                        placeholder="search"
+                        onSearch={onSearch}
+                        onChange={(e) => onSearch(e.target.value)}
+                        style={{ width: 200, float: "right" }}
+                    />
                 </div>
                 <Form form={form} component={false}>
                     <AntTable dataSource={filteredRows || rowData}
