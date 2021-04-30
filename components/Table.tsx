@@ -19,6 +19,8 @@ export default function Table({ data = [], columns = [] }) {
     const [isAdding, setIsAdding] = useState(false);
     const [addingKey, setAddingKey] = useState('');
 
+    const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
     const isRowAdding = (record) => record.key === addingKey;
 
     const rowSelection = {
@@ -76,20 +78,22 @@ export default function Table({ data = [], columns = [] }) {
         setIsAdding(false);
     };
 
-    const deleteInstances = () => {
+    const deleteInstances = async () => {
+        setIsDeleteLoading(true);
         const IDs = selectedRows.map(row => row._id);
-        fetch(`api/threads/instances`, {
-            method: "DELETE", body: JSON.stringify({
+        const resp = await fetch(`api/threads/instances`, {
+            method: "DELETE",
+            body: JSON.stringify({
                 collectionName: threadsCtxState.selectedCollection.name,
                 threadID: threadsCtxState.selectedThread.id,
                 IDs
             })
-        }).then(resp => {
-            if (resp.ok) {
-                setRowData(rowData.filter(row => !IDs.includes(row._id)));
-            }
-            setSelectedRows([]);
-        })
+        });
+        if (resp.ok) {
+            setRowData(rowData.filter(row => !IDs.includes(row._id)));
+        }
+        setSelectedRows([]);
+        setIsDeleteLoading(false);
     };
 
     const onSearch = (searchQuery) => {
@@ -176,7 +180,15 @@ export default function Table({ data = [], columns = [] }) {
                         <Button className={styles.actionButton} icon={<UndoOutlined />} onClick={undoNewInstance}>Undo</Button>
                     }
                     <Button className={styles.actionButton} icon={<EditOutlined />} disabled>Edit</Button>
-                    <Button className={styles.actionButton} icon={<DeleteOutlined />} disabled={selectedRows?.length === 0} onClick={deleteInstances}>Delete</Button>
+                    <Button
+                        className={styles.actionButton}
+                        icon={<DeleteOutlined />}
+                        disabled={selectedRows?.length === 0}
+                        onClick={deleteInstances}
+                        loading={isDeleteLoading}
+                    >
+                        Delete
+                    </Button>
                     <Search placeholder="search" onSearch={onSearch} onChange={(e) => onSearch(e.target.value)} style={{ width: 200, float: "right" }} />
                 </div>
                 <Form form={form} component={false}>
