@@ -122,6 +122,13 @@ export default function Table({ data = [], columns = [] }) {
 
     useEffect(() => {
         setRowData(data);
+        data.forEach(row => {
+            Object.entries(row).forEach(([key, value]) => {
+                if (typeof value === "object") {
+                    row[key] = JSON.stringify(value, null, 2);
+                }
+            })
+        })
     }, [data])
 
     const mergedColumns = columns.map((col) => {
