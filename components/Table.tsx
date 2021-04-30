@@ -20,6 +20,8 @@ export default function Table({ data = [], columns = [] }) {
     const [addingKey, setAddingKey] = useState('');
 
     const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+    const [isSavingLoading, setIsSavingLoading] = useState(false);
+
 
     const isRowAdding = (record) => record.key === addingKey;
 
@@ -48,6 +50,7 @@ export default function Table({ data = [], columns = [] }) {
 
     const saveNewInstance = async () => {
         try {
+            setIsSavingLoading(true);
             await form.validateFields();
             const newInstance = {
                 ...form.getFieldsValue(true),
@@ -55,20 +58,23 @@ export default function Table({ data = [], columns = [] }) {
                 receipt: {},
             }
             const resp = await fetch(`api/threads/instances`, {
-                method: "POST", body: JSON.stringify({
+                method: "POST",
+                body: JSON.stringify({
                     collectionName: threadsCtxState.selectedCollection.name,
                     threadID: threadsCtxState.selectedThread.id,
                     instance: newInstance
                 })
-            })
+            });
             if (resp.ok) {
                 const newID = await resp.json();
                 setRowData([{ _id: newID, key: addingKey, ...newInstance }, ...rowData.filter(row => row.key !== addingKey)]);
                 setIsAdding(false);
                 setAddingKey(null);
+                setIsSavingLoading(false);
             }
         } catch (e) {
             console.error("Required fields missing!", e);
+            setIsSavingLoading(false);
         }
     };
 
@@ -169,11 +175,24 @@ export default function Table({ data = [], columns = [] }) {
                 <div className={styles.tableActionsBar}>
                     {
                         !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button className={styles.actionButton} icon={<PlusOutlined />} onClick={addInstance}>Add</Button>
+                        <Button
+                            className={styles.actionButton}
+                            icon={<PlusOutlined />}
+                            onClick={addInstance}
+                        >
+                            Add
+                        </Button>
                     }
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button className={styles.actionButton} icon={<SaveOutlined />} onClick={saveNewInstance}>Save</Button>
+                        <Button
+                            className={styles.actionButton}
+                            icon={<SaveOutlined />}
+                            onClick={saveNewInstance}
+                            loading={isSavingLoading}
+                        >
+                            Save
+                        </Button>
                     }
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
