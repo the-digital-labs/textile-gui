@@ -3,7 +3,7 @@ import { Menu } from 'antd';
 import { GithubOutlined } from "@ant-design/icons";
 
 export default function TopBar() {
-    return <Menu mode="horizontal">
+    return <Menu mode="horizontal" selectable={false}>
         <Menu.Item key="title">
             <h2 style={{ marginBottom: 0 }}>textile-gui</h2>
         </Menu.Item>
