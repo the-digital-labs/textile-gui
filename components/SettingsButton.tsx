@@ -48,9 +48,10 @@ export default function SettingsButton(props) {
                         <Input />
                     </Form.Item>
                     <Form.Item label="UI Theme" required>
-                        <Switch checkedChildren="Light" unCheckedChildren="Dark" defaultChecked />
+                        <Switch checkedChildren="Light" unCheckedChildren="Dark" defaultChecked={false} />
                     </Form.Item>
                 </Form>
+                <small>Settings are saved in your browser's LocalStorage, we do not collect your data.</small>
             </Modal>
         </>
     );
