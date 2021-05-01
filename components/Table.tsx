@@ -4,6 +4,7 @@ import { Table as AntTable, Spin, Button, Input, InputNumber, Form } from "antd"
 import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
 import { PlusOutlined, DeleteOutlined, EditOutlined, SaveOutlined, UndoOutlined } from "@ant-design/icons";
+import ExportButton from "./ExportButton";
 
 const { Search } = Input;
 
@@ -236,6 +237,7 @@ export default function Table({ data = [], columns = [] }) {
                         onChange={(e) => onSearch(e.target.value)}
                         style={{ width: 200, float: "right" }}
                     />
+                    <ExportButton style={{ float: "right", marginRight: 10 }}/>
                 </div>
                 <Form form={form} component={false}>
                     <AntTable dataSource={filteredRows || rowData}
