@@ -2,12 +2,14 @@ import { useReducer, createContext } from "react";
 
 const initialState = {
     isTableLoading: false,
-    isTreeLoading: false
+    isTreeLoading: false,
+    isSettingsOpen: false
 };
 
 const actionTypes = {
     SET_TABLE_LOADING: "SET_TABLE_LOADING",
-    SET_TREE_LOADING: "SET_TREE_LOADING"
+    SET_TREE_LOADING: "SET_TREE_LOADING",
+    SET_SETTINGS_OPEN: "SET_SETTINGS_OPEN"
 };
 
 const reducer = (state, action) => {
@@ -17,6 +19,9 @@ const reducer = (state, action) => {
         };
         case actionTypes.SET_TREE_LOADING: {
             return { ...state, isTreeLoading: action.payload.isTreeLoading };
+        };
+        case actionTypes.SET_SETTINGS_OPEN: {
+            return { ...state, isSettingsOpen: action.payload.isSettingsOpen };
         };
         default: {
             throw new Error('Unexpected action');
@@ -40,6 +45,12 @@ export function AppProvider({ children }) {
             type: actionTypes.SET_TREE_LOADING,
             payload: {
                 isTreeLoading: isTreeLoading
+            }
+        }),
+        setIsSettingsOpen: (isOpen: boolean) => dispatch({
+            type: actionTypes.SET_SETTINGS_OPEN,
+            payload: {
+                isSettingsOpen: isOpen
             }
         })
     };

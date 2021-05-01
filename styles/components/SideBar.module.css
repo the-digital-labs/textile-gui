@@ -6,3 +6,12 @@
 .cardContainer {
     height: 100%;
 }
+
+.cardBody {
+    height: calc(100% - 63px);
+}
+
+.sideBarToolbar {
+    position: absolute;
+    bottom: 22px;
+}
