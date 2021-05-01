@@ -37,6 +37,7 @@ Remember these keys are private, so do not commit your `config.js` to a public r
 - Delete threads, buckets, collections and instances in UI. (can delete instances) 🚧
 - Import JSON files as data. (no progress) ❌
 - Upload KEY and SECRET_KEY from UI. Create settings UI to replace `config.js`. (no progress) ❌
+- Refactor NextJS out of project into a normal client-side React app. (no-progress) ❌
 
 ## Technologies
 
