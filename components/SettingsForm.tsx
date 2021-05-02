@@ -11,13 +11,16 @@ export default function SettingsForm(props) {
         window.localStorage.setItem("HUB_KEY", values.hubKey);
         window.localStorage.setItem("HUB_SECRET", values.hubSecret);
         window.localStorage.setItem("DARK_MODE", values.darkMode);
+        appCtxActions.setHubKey(values.hubKey);
+        appCtxActions.setHubSecret(values.hubSecret);
+        appCtxActions.setIsDarkMode(values.darkMode);
     };
 
     useEffect(() => {
         form.setFieldsValue({
-            hubKey: window.localStorage.getItem("HUB_KEY"),
-            hubSecret: window.localStorage.getItem("HUB_SECRET"),
-            darkMode: window.localStorage.getItem("DARK_MODE") === "true"
+            hubKey: appCtxState.hubKey,
+            hubSecret: appCtxState.hubSecret,
+            darkMode: appCtxState.darkMode
         });
     }, [appCtxState.isSettingsOpen]);
 

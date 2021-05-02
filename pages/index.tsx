@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Table from "../components/Table";
@@ -83,6 +83,12 @@ export default function Home() {
     })
     return columns;
   };
+
+  useEffect(() => {
+    appCtxActions.setHubKey(window.localStorage.getItem("HUB_KEY"));
+    appCtxActions.setHubSecret(window.localStorage.getItem("HUB_SECRET"));
+    appCtxActions.setIsDarkMode(window.localStorage.getItem("DARK_MODE") === "true");
+  }, []);
 
   return (
     <>
