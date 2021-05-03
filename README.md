@@ -20,7 +20,7 @@ For information on how to create a Textile account and get your API keys, visit:
 
 Remember these keys are private, so do not commit your `config.js` to a public repository!
 
-2. Run: `npm run dev` in your terminal to start the [NextJS](https://nextjs.org/) webserver.
+2. Run: `npm run dev` in your terminal to start the devserver.
 
 3. Open: `http://localhost:3000` in your browser.
 
@@ -37,11 +37,9 @@ Remember these keys are private, so do not commit your `config.js` to a public r
 - Delete threads, buckets, collections and instances in UI. (can delete instances) 🚧
 - Import JSON files as data. (no progress) ❌
 - Upload KEY and SECRET_KEY from UI. Create settings UI to replace `config.js`. (no progress) ❌
-- Refactor NextJS out of project into a normal client-side React app. (no-progress) ❌
+- Refactor NextJS out of project into a normal client-side React app. (complete) ✔️
 
 ## Technologies
-
-[NextJS](https://nextjs.org/)
 
 [React](https://reactjs.org/)
 
