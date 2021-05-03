@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import '../styles/globals.css';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 import { StoreProvider } from "../store/provider";
 import { DARK_MODE } from "../config.js";
-import { useEffect } from 'react';
 
 export default function App() {
 
@@ -15,7 +14,7 @@ export default function App() {
 
   return (
     <StoreProvider>
-      <Index />
+      <div>Hello</div>
     </StoreProvider>
   );
 };

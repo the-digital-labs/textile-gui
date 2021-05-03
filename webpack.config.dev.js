@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    devtool: 'eval-source-map',
     entry: './index.js',
     devServer: {
         contentBase: path.join(__dirname, 'dev'),
@@ -34,7 +33,8 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: ['style-loader', 'css-loader', 'less-loader'],
+                use: ['style-loader', 'css-loader'],
+                exclude: /node_modules/
             }
         ]
     },

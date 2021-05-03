@@ -72,7 +72,7 @@ export default function Home() {
     instances.forEach(instance => {
       columnTypes = { ...columnTypes, ...Object.keys(instance) };
     });
-    Object.values(columnTypes).forEach((type: any, index: number) => {
+    Object.values(columnTypes).forEach((type, index) => {
       columns.push({
         title: type,
         dataIndex: type,
