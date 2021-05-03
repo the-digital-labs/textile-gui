@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../styles/components/Table.css";
-import { Table as AntTable, Spin, Button, Input, InputNumber, Form } from "antd";
+import { Table as AntTable, Spin, Button, Input, Form } from "antd";
 import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
 import { PlusOutlined, DeleteOutlined, EditOutlined, SaveOutlined, UndoOutlined } from "@ant-design/icons";
 import ExportButton from "./ExportButton";
+import { TextileClient, createInstances } from "../src/api/threads/index";
+import { ThreadID } from "@textile/hub";
 
 const { Search } = Input;
 
@@ -58,17 +60,15 @@ export default function Table({ data = [], columns = [] }) {
                 dateCreated: Date.now(),
                 receipt: {},
             }
-            const resp = await fetch(`api/threads/instances`, {
-                method: "POST",
-                body: JSON.stringify({
-                    collectionName: threadsCtxState.selectedCollection.name,
-                    threadID: threadsCtxState.selectedThread.id,
-                    instance: newInstance
-                })
-            });
-            if (resp.ok) {
-                const newID = await resp.json();
-                setRowData([{ _id: newID, key: addingKey, ...newInstance }, ...rowData.filter(row => row.key !== addingKey)]);
+            const client = await new TextileClient().init();
+            const instanceResp = await createInstances(
+                client,
+                ThreadID.fromString(threadsCtxState.selectedThread.id),
+                threadsCtxState.selectedCollection.name,
+                [newInstance]
+            );
+            if (instanceResp) {
+                setRowData([{ _id: instanceResp, key: addingKey, ...newInstance }, ...rowData.filter(row => row.key !== addingKey)]);
                 setIsAdding(false);
                 setAddingKey(null);
                 setIsSavingLoading(false);
