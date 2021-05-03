@@ -5,7 +5,7 @@ import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
 import { PlusOutlined, DeleteOutlined, EditOutlined, SaveOutlined, UndoOutlined } from "@ant-design/icons";
 import ExportButton from "./ExportButton";
-import { TextileClient, createInstances } from "../src/api/threads/index";
+import { TextileClient, createInstances, deleteInstances } from "../src/api/threads/index";
 import { ThreadID } from "@textile/hub";
 
 const { Search } = Input;
@@ -85,20 +85,17 @@ export default function Table({ data = [], columns = [] }) {
         setIsAdding(false);
     };
 
-    const deleteInstances = async () => {
+    const deleteRowInstances = async () => {
         setIsDeleteLoading(true);
         const IDs = selectedRows.map(row => row._id);
-        const resp = await fetch(`api/threads/instances`, {
-            method: "DELETE",
-            body: JSON.stringify({
-                collectionName: threadsCtxState.selectedCollection.name,
-                threadID: threadsCtxState.selectedThread.id,
-                IDs
-            })
-        });
-        if (resp.ok) {
-            setRowData(rowData.filter(row => !IDs.includes(row._id)));
-        }
+        const client = await new TextileClient().init();
+        await deleteInstances(
+            client,
+            ThreadID.fromString(threadsCtxState.selectedThread.id),
+            threadsCtxState.selectedCollection.name,
+            IDs
+        );
+        setRowData(rowData.filter(row => !IDs.includes(row._id)));
         setSelectedRows([]);
         setIsDeleteLoading(false);
     };
@@ -226,7 +223,7 @@ export default function Table({ data = [], columns = [] }) {
                         className="actionButton"
                         icon={<DeleteOutlined />}
                         disabled={selectedRows?.length === 0}
-                        onClick={deleteInstances}
+                        onClick={deleteRowInstances}
                         loading={isDeleteLoading}
                     >
                         Delete
