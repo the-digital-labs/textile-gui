@@ -1,3 +1,4 @@
+import React from "react";
 import { ThreadsProvider } from "./threads";
 import { AppProvider } from "./app";
 

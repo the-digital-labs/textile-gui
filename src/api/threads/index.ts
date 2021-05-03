@@ -93,11 +93,3 @@ export class TextileClient {
         return this.client;
     }
 };
-
-export default async function threadsHandler(req, res) {
-    if (req.method === "GET") {
-        const client = await new TextileClient().init();
-        const dbs = await listDBs(client);
-        res.status(200).json(dbs);
-    }
-};

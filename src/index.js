@@ -1,12 +1,14 @@
+import React from "react";
 import { useContext, useEffect } from "react";
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import '../styles/Home.css'
 import Table from "../components/Table";
 import TopBar from "../components/TopBar";
 import SideBar from "../components/SideBar";
 import { Row, Col } from "antd";
 import { ThreadsContext } from "../store/threads";
 import { AppContext } from "../store/app";
+import { TextileClient, listDBs, listCollections, getInstancesByQuery } from "./api/threads/index.ts";
+import { ThreadID, Query } from "@textile/hub";
 
 export default function Home() {
   const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
@@ -16,17 +18,16 @@ export default function Home() {
     appCtxActions.setIsTableLoading(true);
     appCtxActions.setIsTreeLoading(true);
     let threadsCounter = 0;
-    const threadsResponse = await fetch("api/threads");
-    if (threadsResponse.ok) {
-      const threads = await threadsResponse.json();
-      threads.forEach(async (thread, threadIndex) => {
+    const client = await new TextileClient().init();
+    const dbs = await listDBs(client);
+    if (dbs?.length > 0) {
+      dbs.forEach(async (thread, threadIndex) => {
         threadsCounter++;
         thread.key = `0-0-${threadIndex}`;
         thread.title = thread.name;
-        const collectionsResponse = await fetch(`api/threads/collections/?threadID=${thread.id}`);
-        if (collectionsResponse.ok) {
+        const collections = await listCollections(client, ThreadID.fromString(thread.id))
+        if (collections?.length > 0) {
           let collectionsCounter = 0;
-          const collections = await collectionsResponse.json();
           thread.children = [];
           collections.forEach((collection, collectionIndex) => {
             collectionsCounter++;
@@ -38,8 +39,8 @@ export default function Home() {
               threadsCtxActions.setSelectedThread(thread);
             }
             thread.children.push(collection);
-            if (threadsCounter === threads.length && collectionsCounter === collections.length) {
-              const treeData = [{ title: "Threads", key: '0-0', children: threads }];
+            if (threadsCounter === dbs.length && collectionsCounter === collections.length) {
+              const treeData = [{ title: "Threads", key: '0-0', children: dbs }];
               threadsCtxActions.setTreeData(treeData);
               appCtxActions.setIsTreeLoading(false);
               appCtxActions.setIsTableLoading(false);
@@ -54,16 +55,16 @@ export default function Home() {
     }
   };
 
-  function fetchInstances(threadID, collectionName) {
+  async function fetchInstances(threadID, collectionName) {
     appCtxActions.setIsTableLoading(true);
-    fetch(`api/threads/instances/?threadID=${threadID}&collectionName=${collectionName}`).then(resp => resp.json().then(json => {
-      console.log("instances", json);
-      json.forEach((instance, index) => {
-        instance.key = index;
-      });
-      threadsCtxActions.setInstances(json);
-      appCtxActions.setIsTableLoading(false);
-    }));
+    const client = await new TextileClient().init();
+    const query = new Query().orderByIDDesc();
+    const instances = await getInstancesByQuery(client, ThreadID.fromString(threadID), collectionName, query);
+    instances.forEach((instance, index) => {
+      instance.key = index;
+    });
+    threadsCtxActions.setInstances(instances);
+    appCtxActions.setIsTableLoading(false);
   };
 
   function getColumns(instances) {
@@ -72,7 +73,7 @@ export default function Home() {
     instances.forEach(instance => {
       columnTypes = { ...columnTypes, ...Object.keys(instance) };
     });
-    Object.values(columnTypes).forEach((type: any, index: number) => {
+    Object.values(columnTypes).forEach((type, index) => {
       columns.push({
         title: type,
         dataIndex: type,
@@ -92,9 +93,6 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>textile-gui</title>
-      </Head>
       <TopBar />
       <Row wrap={false}>
         <Col flex="250px">

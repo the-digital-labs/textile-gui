@@ -1,10 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import styles from "../styles/components/Table.module.css";
-import { Table as AntTable, Spin, Button, Input, InputNumber, Form } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import "../styles/components/Table.css";
+import { Table as AntTable, Spin, Button, Input, Form } from "antd";
 import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
 import { PlusOutlined, DeleteOutlined, EditOutlined, SaveOutlined, UndoOutlined } from "@ant-design/icons";
 import ExportButton from "./ExportButton";
+import { TextileClient, createInstances, deleteInstances } from "../src/api/threads/index";
+import { ThreadID } from "@textile/hub";
 
 const { Search } = Input;
 
@@ -58,17 +60,15 @@ export default function Table({ data = [], columns = [] }) {
                 dateCreated: Date.now(),
                 receipt: {},
             }
-            const resp = await fetch(`api/threads/instances`, {
-                method: "POST",
-                body: JSON.stringify({
-                    collectionName: threadsCtxState.selectedCollection.name,
-                    threadID: threadsCtxState.selectedThread.id,
-                    instance: newInstance
-                })
-            });
-            if (resp.ok) {
-                const newID = await resp.json();
-                setRowData([{ _id: newID, key: addingKey, ...newInstance }, ...rowData.filter(row => row.key !== addingKey)]);
+            const client = await new TextileClient().init();
+            const instanceResp = await createInstances(
+                client,
+                ThreadID.fromString(threadsCtxState.selectedThread.id),
+                threadsCtxState.selectedCollection.name,
+                [newInstance]
+            );
+            if (instanceResp) {
+                setRowData([{ _id: instanceResp, key: addingKey, ...newInstance }, ...rowData.filter(row => row.key !== addingKey)]);
                 setIsAdding(false);
                 setAddingKey(null);
                 setIsSavingLoading(false);
@@ -85,20 +85,17 @@ export default function Table({ data = [], columns = [] }) {
         setIsAdding(false);
     };
 
-    const deleteInstances = async () => {
+    const deleteRowInstances = async () => {
         setIsDeleteLoading(true);
         const IDs = selectedRows.map(row => row._id);
-        const resp = await fetch(`api/threads/instances`, {
-            method: "DELETE",
-            body: JSON.stringify({
-                collectionName: threadsCtxState.selectedCollection.name,
-                threadID: threadsCtxState.selectedThread.id,
-                IDs
-            })
-        });
-        if (resp.ok) {
-            setRowData(rowData.filter(row => !IDs.includes(row._id)));
-        }
+        const client = await new TextileClient().init();
+        await deleteInstances(
+            client,
+            ThreadID.fromString(threadsCtxState.selectedThread.id),
+            threadsCtxState.selectedCollection.name,
+            IDs
+        );
+        setRowData(rowData.filter(row => !IDs.includes(row._id)));
         setSelectedRows([]);
         setIsDeleteLoading(false);
     };
@@ -176,18 +173,18 @@ export default function Table({ data = [], columns = [] }) {
     return <>
         {
             appCtxState.isTableLoading &&
-            <div className={styles.tableSpinnerContainer}>
+            <div className="tableSpinnerContainer">
                 <Spin style={{ alignSelf: "center" }} size="large" />
             </div>
         }
         {
             !appCtxState.isTableLoading &&
             <div>
-                <div className={styles.tableActionsBar}>
+                <div className="tableActionsBar">
                     {
                         !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button
-                            className={styles.actionButton}
+                            className="actionButton"
                             icon={<PlusOutlined />}
                             onClick={addInstance}
                         >
@@ -197,7 +194,7 @@ export default function Table({ data = [], columns = [] }) {
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button
-                            className={styles.actionButton}
+                            className="actionButton"
                             icon={<SaveOutlined />}
                             onClick={saveNewInstance}
                             loading={isSavingLoading}
@@ -208,7 +205,7 @@ export default function Table({ data = [], columns = [] }) {
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button
-                            className={styles.actionButton}
+                            className="actionButton"
                             icon={<UndoOutlined />}
                             onClick={undoNewInstance}
                         >
@@ -216,17 +213,17 @@ export default function Table({ data = [], columns = [] }) {
                         </Button>
                     }
                     <Button
-                        className={styles.actionButton}
+                        className="actionButton"
                         icon={<EditOutlined />}
                         disabled
                     >
                         Edit
                     </Button>
                     <Button
-                        className={styles.actionButton}
+                        className="actionButton"
                         icon={<DeleteOutlined />}
                         disabled={selectedRows?.length === 0}
-                        onClick={deleteInstances}
+                        onClick={deleteRowInstances}
                         loading={isDeleteLoading}
                     >
                         Delete
@@ -237,7 +234,7 @@ export default function Table({ data = [], columns = [] }) {
                         onChange={(e) => onSearch(e.target.value)}
                         style={{ width: 200, float: "right" }}
                     />
-                    <ExportButton style={{ float: "right", marginRight: 10 }}/>
+                    <ExportButton style={{ float: "right", marginRight: 10 }} />
                 </div>
                 <Form form={form} component={false}>
                     <AntTable dataSource={filteredRows || rowData}
@@ -252,7 +249,7 @@ export default function Table({ data = [], columns = [] }) {
                                 cell: EditableCell,
                             },
                         }}
-                        className={styles.table}
+                        className="table"
                         sticky={true}
                     />
                 </Form>
