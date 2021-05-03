@@ -1,4 +1,5 @@
-import styles from "../styles/components/Tree.module.css";
+import React from "react";
+import "../styles/components/Tree.css";
 import { Tree as AntTree } from "antd";
 
 export default function Tree({ treeData = [] }) {

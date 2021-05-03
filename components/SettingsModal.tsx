@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Modal, Button } from 'antd';
 import { AppContext } from "../store/app";
 import SettingsForm from "./SettingsForm";

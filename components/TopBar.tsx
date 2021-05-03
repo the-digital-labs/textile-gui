@@ -1,4 +1,5 @@
-import styles from "../styles/components/TopBar.module.css";
+import React from "react";
+import "../styles/components/TopBar.css";
 import { Menu } from 'antd';
 import { GithubOutlined } from "@ant-design/icons";
 

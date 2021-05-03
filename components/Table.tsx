@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import styles from "../styles/components/Table.module.css";
+import React, { useContext, useEffect, useState } from "react";
+import "../styles/components/Table.css";
 import { Table as AntTable, Spin, Button, Input, InputNumber, Form } from "antd";
 import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
@@ -176,18 +176,18 @@ export default function Table({ data = [], columns = [] }) {
     return <>
         {
             appCtxState.isTableLoading &&
-            <div className={styles.tableSpinnerContainer}>
+            <div className="tableSpinnerContainer">
                 <Spin style={{ alignSelf: "center" }} size="large" />
             </div>
         }
         {
             !appCtxState.isTableLoading &&
             <div>
-                <div className={styles.tableActionsBar}>
+                <div className="tableActionsBar">
                     {
                         !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button
-                            className={styles.actionButton}
+                            className="actionButton"
                             icon={<PlusOutlined />}
                             onClick={addInstance}
                         >
@@ -197,7 +197,7 @@ export default function Table({ data = [], columns = [] }) {
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button
-                            className={styles.actionButton}
+                            className="actionButton"
                             icon={<SaveOutlined />}
                             onClick={saveNewInstance}
                             loading={isSavingLoading}
@@ -208,7 +208,7 @@ export default function Table({ data = [], columns = [] }) {
                     {
                         isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                         <Button
-                            className={styles.actionButton}
+                            className="actionButton"
                             icon={<UndoOutlined />}
                             onClick={undoNewInstance}
                         >
@@ -216,14 +216,14 @@ export default function Table({ data = [], columns = [] }) {
                         </Button>
                     }
                     <Button
-                        className={styles.actionButton}
+                        className="actionButton"
                         icon={<EditOutlined />}
                         disabled
                     >
                         Edit
                     </Button>
                     <Button
-                        className={styles.actionButton}
+                        className="actionButton"
                         icon={<DeleteOutlined />}
                         disabled={selectedRows?.length === 0}
                         onClick={deleteInstances}
@@ -237,7 +237,7 @@ export default function Table({ data = [], columns = [] }) {
                         onChange={(e) => onSearch(e.target.value)}
                         style={{ width: 200, float: "right" }}
                     />
-                    <ExportButton style={{ float: "right", marginRight: 10 }}/>
+                    <ExportButton style={{ float: "right", marginRight: 10 }} />
                 </div>
                 <Form form={form} component={false}>
                     <AntTable dataSource={filteredRows || rowData}
@@ -252,7 +252,7 @@ export default function Table({ data = [], columns = [] }) {
                                 cell: EditableCell,
                             },
                         }}
-                        className={styles.table}
+                        className="table"
                         sticky={true}
                     />
                 </Form>

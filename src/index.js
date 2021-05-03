@@ -1,6 +1,6 @@
+import React from "react";
 import { useContext, useEffect } from "react";
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import '../styles/Home.css'
 import Table from "../components/Table";
 import TopBar from "../components/TopBar";
 import SideBar from "../components/SideBar";
@@ -92,9 +92,6 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>textile-gui</title>
-      </Head>
       <TopBar />
       <Row wrap={false}>
         <Col flex="250px">
