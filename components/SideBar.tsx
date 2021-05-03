@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import styles from "../styles/components/SideBar.module.css";
+import "../styles/components/SideBar.css";
 import { Card, Spin } from 'antd';
 import Tree from "./Tree";
 import RefreshButton from "./RefreshButton";
@@ -16,19 +16,19 @@ export default function SideBar({ treeData, buildTree }) {
     return (
         <Card
             title={<>Tree Explorer <RefreshButton buildTree={buildTree} /></>}
-            className={styles.cardContainer}
+            className="cardContainer"
             bodyStyle={{ height: "calc(100% - 63px)" }}
         >
             {
                 appCtxState.isTreeLoading &&
-                <div className={styles.spinnerContainer}>
+                <div className="spinnerContainer">
                     <Spin />
                 </div>
             }
             {
                 !appCtxState.isTreeLoading && <Tree treeData={treeData} />
             }
-            <div className={styles.sideBarToolbar}>
+            <div className="sideBarToolbar">
                 <SettingsButton />
             </div>
         </Card>
