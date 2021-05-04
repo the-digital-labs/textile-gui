@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode: 'development',
     entry: './App.js',
+    devtool: "eval-source-map",
     devServer: {
         contentBase: path.join(__dirname, 'dev'),
         compress: true,
@@ -14,7 +15,6 @@ module.exports = {
         path: path.join(__dirname, 'dev'),
         filename: 'textilegui.bundle.dev.js',
     },
-    watch: true,
     module: {
         rules: [
             {
