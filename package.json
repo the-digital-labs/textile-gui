@@ -1,5 +1,6 @@
 {
   "name": "textile-gui",
+  "homepage": "https://the-digital-labs.github.io/textile-gui",
   "version": "0.1.0",
   "private": true,
   "scripts": {
