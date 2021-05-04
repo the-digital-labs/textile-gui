@@ -60,7 +60,11 @@ export default function Table({ data = [], columns = [] }) {
                 dateCreated: Date.now(),
                 receipt: {},
             }
-            const client = await new TextileClient().init();
+            const client = await new TextileClient().init({
+                key: appCtxState.hubKey,
+                secret: appCtxState.hubSecret
+            });
+            if (!client) return;
             const instanceResp = await createInstances(
                 client,
                 ThreadID.fromString(threadsCtxState.selectedThread.id),
@@ -88,7 +92,11 @@ export default function Table({ data = [], columns = [] }) {
     const deleteRowInstances = async () => {
         setIsDeleteLoading(true);
         const IDs = selectedRows.map(row => row._id);
-        const client = await new TextileClient().init();
+        const client = await new TextileClient().init({
+            key: appCtxState.hubKey,
+            secret: appCtxState.hubSecret
+        });
+        if (!client) return;
         await deleteInstances(
             client,
             ThreadID.fromString(threadsCtxState.selectedThread.id),

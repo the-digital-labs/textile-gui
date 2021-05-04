@@ -1,13 +1,12 @@
-import { HUB_KEY, HUB_SECRET } from "./config.js";
 import { Client, GetThreadResponse, ThreadID, QueryJSON, Query } from "@textile/hub";
 import * as pb from "@textile/threads-client-grpc/threads_pb";
 
-const keyInfo = {
-    key: HUB_KEY,
-    secret: HUB_SECRET
+interface KeyInfoInterface {
+    key: string,
+    secret: string
 };
 
-export async function connectClient(): Promise<Client> {
+export async function connectClient(keyInfo: KeyInfoInterface): Promise<Client> {
     const client: Client = await Client.withKeyInfo(keyInfo);
     return client;
 };
@@ -86,10 +85,15 @@ export class TextileClient {
     constructor() {
     }
 
-    async init() {
-        if (!this.client) {
-            this.client = await connectClient();
+    async init(keyInfo: KeyInfoInterface) {
+        if (keyInfo) {
+            if (!this.client) {
+                this.client = await connectClient(keyInfo);
+            }
+            return this.client;
+        } else {
+            console.log("No KeyInfo provided for Textile client!")
+            return null;
         }
-        return this.client;
     }
 };

@@ -18,7 +18,11 @@ export default function Main() {
     appCtxActions.setIsTableLoading(true);
     appCtxActions.setIsTreeLoading(true);
     let threadsCounter = 0;
-    const client = await new TextileClient().init();
+    const client = await new TextileClient().init({
+      key: appCtxState.hubKey,
+      secret: appCtxState.hubSecret
+    });
+    if (!client) return;
     const dbs = await listDBs(client);
     if (dbs?.length > 0) {
       dbs.forEach(async (thread, threadIndex) => {
@@ -57,7 +61,11 @@ export default function Main() {
 
   async function fetchInstances(threadID, collectionName) {
     appCtxActions.setIsTableLoading(true);
-    const client = await new TextileClient().init();
+    const client = await new TextileClient().init({
+      key: appCtxState.hubKey,
+      secret: appCtxState.hubSecret
+    });
+    if (!client) return;
     const query = new Query().orderByIDDesc();
     const instances = await getInstancesByQuery(client, ThreadID.fromString(threadID), collectionName, query);
     instances.forEach((instance, index) => {

@@ -10,8 +10,10 @@ export default function SideBar({ treeData, buildTree }) {
     const [appCtxState, appCtxActions] = useContext(AppContext);
 
     useEffect(() => {
-        buildTree()
-    }, [])
+        if (appCtxState.hubKey && appCtxState.hubSecret) {
+            buildTree();
+        }
+    }, [appCtxState.hubKey, appCtxState.hubSecret])
 
     return (
         <Card
