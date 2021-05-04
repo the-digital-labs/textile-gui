@@ -5,7 +5,9 @@ Web frontend for querying and interacting with [Textile](https://www.textile.io/
 
 ## Get Started
 
-1. Click on the settings icon in the bottom left. Input your Textile API key + secret and click "save". Your information is saved in your localstorage, we do not collect or send your keys anywhere. The whole app is fully client-side.
+1. Visit: https://the-digital-labs.github.io/textile-gui/index.html
+
+2. Click on the settings icon in the bottom left. Input your Textile API key + secret and click "save". Your information is saved in your localstorage, we do not collect or send your keys anywhere. The whole app is fully client-side.
 
 For information on how to create a Textile account and get your API keys, visit: https://docs.textile.io/hub/apis/
 
