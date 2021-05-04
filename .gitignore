@@ -2,3 +2,4 @@ node_modules
 .next
 config.js
 dev/
+prod/
