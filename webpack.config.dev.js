@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: './index.js',
+    entry: './App.js',
     devServer: {
         contentBase: path.join(__dirname, 'dev'),
         compress: true,

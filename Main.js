@@ -1,16 +1,16 @@
 import React from "react";
 import { useContext, useEffect } from "react";
-import '../styles/Home.css'
-import Table from "../components/Table";
-import TopBar from "../components/TopBar";
-import SideBar from "../components/SideBar";
+import './styles/Home.css'
+import Table from "./components/Table";
+import TopBar from "./components/TopBar";
+import SideBar from "./components/SideBar";
 import { Row, Col } from "antd";
-import { ThreadsContext } from "../store/threads";
-import { AppContext } from "../store/app";
-import { TextileClient, listDBs, listCollections, getInstancesByQuery } from "./api/threads/index.ts";
+import { ThreadsContext } from "./store/threads";
+import { AppContext } from "./store/app";
+import { TextileClient, listDBs, listCollections, getInstancesByQuery } from "./textile.ts";
 import { ThreadID, Query } from "@textile/hub";
 
-export default function Home() {
+export default function Main() {
   const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
   const [appCtxState, appCtxActions] = useContext(AppContext);
 

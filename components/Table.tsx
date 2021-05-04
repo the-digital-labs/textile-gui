@@ -5,7 +5,7 @@ import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
 import { PlusOutlined, DeleteOutlined, EditOutlined, SaveOutlined, UndoOutlined } from "@ant-design/icons";
 import ExportButton from "./ExportButton";
-import { TextileClient, createInstances, deleteInstances } from "../src/api/threads/index";
+import { TextileClient, createInstances, deleteInstances } from "../textile";
 import { ThreadID } from "@textile/hub";
 
 const { Search } = Input;

@@ -1,4 +1,4 @@
-import { HUB_KEY, HUB_SECRET } from "../../../config.js";
+import { HUB_KEY, HUB_SECRET } from "./config.js";
 import { Client, GetThreadResponse, ThreadID, QueryJSON, Query } from "@textile/hub";
 import * as pb from "@textile/threads-client-grpc/threads_pb";
 
