@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'production',
-    entry: './App.js',
+    entry: './App.tsx',
     devtool: "source-map",
     output: {
         path: path.join(__dirname, 'prod'),

@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: './App.js',
+    entry: './App.tsx',
     devtool: "eval-source-map",
     devServer: {
         contentBase: path.join(__dirname, 'dev'),
