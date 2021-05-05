@@ -7,22 +7,25 @@ import SideBar from "./components/SideBar";
 import { Row, Col } from "antd";
 import { ThreadsContext } from "./store/threads";
 import { AppContext } from "./store/app";
-import { TextileClient, listDBs, listCollections, getInstancesByQuery } from "./textile.ts";
-import { ThreadID, Query } from "@textile/hub";
+import { TextileClient, listDBs, listCollections, getInstancesByQuery } from "./textile";
+import { ThreadID, Query, Client } from "@textile/hub";
 
 export default function Main() {
   const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
   const [appCtxState, appCtxActions] = useContext(AppContext);
 
-  async function buildTree() {
+  // Used for building the tree data from collections and threads.
+  async function buildTree(): Promise<void> {
     appCtxActions.setIsTableLoading(true);
     appCtxActions.setIsTreeLoading(true);
-    let threadsCounter = 0;
-    const client = await new TextileClient().init({
+    let threadsCounter: number = 0;
+    const client: Client = await new TextileClient().init({
       key: appCtxState.hubKey,
       secret: appCtxState.hubSecret
     });
-    if (!client) return;
+    if (!client) {
+      return;
+    }
     const dbs = await listDBs(client);
     if (dbs?.length > 0) {
       dbs.forEach(async (thread, threadIndex) => {
@@ -59,29 +62,33 @@ export default function Main() {
     }
   };
 
-  async function fetchInstances(threadID, collectionName) {
+  // Used to fetch instances from a collection.
+  async function fetchInstances(threadID: string, collectionName: string): Promise<void> {
     appCtxActions.setIsTableLoading(true);
-    const client = await new TextileClient().init({
+    const client: Client = await new TextileClient().init({
       key: appCtxState.hubKey,
       secret: appCtxState.hubSecret
     });
-    if (!client) return;
-    const query = new Query().orderByIDDesc();
+    if (!client) {
+      return;
+    }
+    const query: Query = new Query().orderByIDDesc();
     const instances = await getInstancesByQuery(client, ThreadID.fromString(threadID), collectionName, query);
-    instances.forEach((instance, index) => {
+    instances.forEach((instance: Record<string, any>, index: number) => {
       instance.key = index;
     });
     threadsCtxActions.setInstances(instances);
     appCtxActions.setIsTableLoading(false);
   };
 
-  function getColumns(instances) {
-    let columns = [];
-    let columnTypes = {};
-    instances.forEach(instance => {
+  // Used to dynamically parse column headers from instances.
+  function getColumns(instances: Array<Record<string, any>>): Array<Record<string, any>> {
+    let columns: Array<Record<string, any>> = [];
+    let columnTypes: Record<string, any> = {};
+    instances.forEach((instance: Record<string, any>) => {
       columnTypes = { ...columnTypes, ...Object.keys(instance) };
     });
-    Object.values(columnTypes).forEach((type, index) => {
+    Object.values(columnTypes).forEach((type: string, index: number) => {
       columns.push({
         title: type,
         dataIndex: type,

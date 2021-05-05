@@ -16,8 +16,8 @@ export async function listThreads(client: Client): Promise<GetThreadResponse[]> 
     return threads;
 };
 
-export async function listDBs(client: Client): Promise<Array<{ id: string; name?: string; }>> {
-    const list: Array<{ id: string; name?: string; }> = await client.listDBs();
+export async function listDBs(client: Client): Promise<Array<Record<string, any>>> {
+    const list: Array<Record<string, any>> = await client.listDBs();
     return list;
 };
 
@@ -35,8 +35,8 @@ export async function collectionFromSchema(client: Client, threadID: ThreadID, s
     await client.newCollection(threadID, { name: name, schema: schema });
 };
 
-export async function listCollections(client: Client, threadID: ThreadID): Promise<Array<pb.GetCollectionInfoReply.AsObject>> {
-    const collections: Array<pb.GetCollectionInfoReply.AsObject> = await client.listCollections(threadID);
+export async function listCollections(client: Client, threadID: ThreadID): Promise<Array<Record<string, any>>> {
+    const collections: Array<Record<string, any>> = await client.listCollections(threadID);
     return collections;
 };
 
