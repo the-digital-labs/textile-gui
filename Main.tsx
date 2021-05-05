@@ -9,6 +9,8 @@ import { ThreadsContext } from "./store/threads";
 import { AppContext } from "./store/app";
 import { TextileClient, listDBs, listCollections, getInstancesByQuery } from "./textile";
 import { ThreadID, Query, Client } from "@textile/hub";
+import { getLocalStorage } from "./helpers";
+import { localStorageKeys } from "./constants";
 
 export default function Main() {
   const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
@@ -100,11 +102,13 @@ export default function Main() {
     return columns;
   };
 
+  // Retrieve localStorage and set to Redux on page load.
   useEffect(() => {
-    appCtxActions.setHubKey(window.localStorage.getItem("HUB_KEY"));
-    appCtxActions.setHubSecret(window.localStorage.getItem("HUB_SECRET"));
-    appCtxActions.setIsDarkMode(window.localStorage.getItem("DARK_MODE") === "true");
-  }, []);
+    const localStorage: Record<string, any> = getLocalStorage();
+    appCtxActions.setHubKey(localStorage[localStorageKeys.HUB_KEY]);
+    appCtxActions.setHubSecret(localStorage[localStorageKeys.HUB_SECRET]);
+    appCtxActions.setIsDarkMode(localStorage[localStorageKeys.DARK_MODE] === "true");
+  }, [window.localStorage]);
 
   return (
     <>
