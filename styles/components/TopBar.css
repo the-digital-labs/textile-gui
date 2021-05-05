@@ -1,0 +1,22 @@
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 20px;
+    border-bottom: 1px solid #303030;
+    background: #141414;
+    color: hsla(0,0%,100%,.85);
+}
+
+.topBar .brandName {
+    margin: 0;
+}
+
+.topBar .githubIcon {
+    align-self: center;
+    color: inherit;
+}
+
+.topBar .githubIcon:hover {
+    align-self: center;
+    color: #177ddc;
+}
