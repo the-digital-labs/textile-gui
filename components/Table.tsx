@@ -241,6 +241,7 @@ export default function Table({ data = [], columns = [] }) {
                         onSearch={onSearch}
                         onChange={(e) => onSearch(e.target.value)}
                         style={{ width: 200, float: "right" }}
+                        disabled={!appCtxState.hubKey || !appCtxState.hubSecret}
                     />
                     <ExportButton style={{ float: "right", marginRight: 10 }} />
                 </div>
