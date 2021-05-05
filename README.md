@@ -5,24 +5,19 @@ Web frontend for querying and interacting with [Textile](https://www.textile.io/
 
 ## Get Started
 
-1. Create a `config.js` file inside the root directory.
+1. Visit: https://the-digital-labs.github.io/textile-gui/index.html
 
-Add your Textile Hub API key and secret to the `config.js` file. 
-
-Example `config.js`:
-```
-export const HUB_KEY = "yourkeyhere";
-export const HUB_SECRET = "yoursecretkeyhere";
-export const DARK_MODE = true; // toggle for light / dark mode UI.
-```
+2. Click on the settings icon in the bottom left. Input your Textile API key + secret and click "save". Your information is saved in your localstorage, we do not collect or send your keys anywhere. The whole app is fully client-side.
 
 For information on how to create a Textile account and get your API keys, visit: https://docs.textile.io/hub/apis/
 
-Remember these keys are private, so do not commit your `config.js` to a public repository!
+### Dev Setup
 
-2. Run: `npm run dev` in your terminal to start the devserver.
+1. `npm i`
 
-3. Open: `http://localhost:3000` in your browser.
+2. `npm run dev` 
+
+3. Open `http://localhost:9000` in your browser.
 
 ## Features and Roadmap
 
@@ -36,7 +31,7 @@ Remember these keys are private, so do not commit your `config.js` to a public r
 - Edit schemas in the UI. (no progress) ❌
 - Delete threads, buckets, collections and instances in UI. (can delete instances) 🚧
 - Import JSON files as data. (no progress) ❌
-- Upload KEY and SECRET_KEY from UI. Create settings UI to replace `config.js`. (no progress) ❌
+- Upload KEY and SECRET_KEY from UI. Create settings UI to replace `config.js`. (functional) ✔️
 - Refactor NextJS out of project into a normal client-side React app. (complete) ✔️
 
 ## Technologies
