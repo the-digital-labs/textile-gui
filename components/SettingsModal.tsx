@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 import { AppContext } from "../store/app";
 import SettingsForm from "./SettingsForm";
 
@@ -10,14 +10,10 @@ export default function SettingsModal(props) {
         <Modal
             title="Settings"
             visible={appCtxState.isSettingsOpen}
-            footer={[
-                <Button key="cancel" onClick={() => appCtxActions.setIsSettingsOpen(false)}>
-                    Cancel
-                </Button>
-            ]}
+            onCancel={() => appCtxActions.setIsSettingsOpen(false)}
+            footer={null}
         >
             <SettingsForm />
-            <small>Settings are saved in your browser's LocalStorage, we do not collect your data.</small>
         </Modal>
     );
 };

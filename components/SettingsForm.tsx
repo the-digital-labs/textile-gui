@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Form, Input, Button } from 'antd';
 import { AppContext } from "../store/app";
+import { SaveOutlined } from '@ant-design/icons';
 
 export default function SettingsForm(props) {
     const [appCtxState, appCtxActions] = useContext(AppContext);
@@ -34,7 +35,10 @@ export default function SettingsForm(props) {
                 <Input.Password />
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <small>Settings are saved in your browser's LocalStorage, we do not collect your data.</small>
+            </Form.Item>
+            <Form.Item>
+                <Button type="primary" htmlType="submit" block icon={<SaveOutlined />}>
                     Save
                 </Button>
             </Form.Item>
