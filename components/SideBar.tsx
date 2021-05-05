@@ -15,9 +15,21 @@ export default function SideBar({ treeData, buildTree }) {
         }
     }, [appCtxState.hubKey, appCtxState.hubSecret])
 
+    const sideBarHeader = () => {
+        return (
+            <>
+                Tree Explorer
+                {
+                    appCtxState.hubKey && appCtxState.hubSecret &&
+                    <RefreshButton buildTree={buildTree} />
+                }
+            </>
+        );
+    };
+
     return (
         <Card
-            title={<>Tree Explorer <RefreshButton buildTree={buildTree} /></>}
+            title={sideBarHeader()}
             className="cardContainer"
             bodyStyle={{ height: "calc(100% - 63px)" }}
         >
