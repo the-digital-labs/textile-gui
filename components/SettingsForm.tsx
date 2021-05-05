@@ -35,6 +35,9 @@ export default function SettingsForm(props) {
                 <Input.Password />
             </Form.Item>
             <Form.Item>
+                <p>Get your Textile API credentials by following their guide: <br />
+                    <a href="https://docs.textile.io/hub/apis/#creating-keys" target="_blank">https://docs.textile.io/hub/apis/#creating-keys</a>
+                </p>
                 <small>Settings are saved in your browser's LocalStorage, we do not collect your data.</small>
             </Form.Item>
             <Form.Item>
