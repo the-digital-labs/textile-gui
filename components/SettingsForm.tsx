@@ -28,10 +28,10 @@ export default function SettingsForm(props) {
             onFinish={handleSaveSettings}
         >
             <Form.Item label="Hub Key" name="hubKey" required>
-                <Input />
+                <Input.Password />
             </Form.Item>
             <Form.Item label="Hub Secret" name="hubSecret" required>
-                <Input />
+                <Input.Password />
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">
