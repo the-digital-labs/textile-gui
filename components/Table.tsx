@@ -16,8 +16,12 @@ export default function Table({ data = [], columns = [] }) {
 
     const [rowData, setRowData] = useState(data);
     const [filteredRows, setFilteredRows] = useState(null);
+
     const [isAdding, setIsAdding] = useState(false);
     const [addingKey, setAddingKey] = useState('');
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingKey, setEditingKey] = useState('');
 
     const [isDeleteLoading, setIsDeleteLoading] = useState(false);
     const [isSavingLoading, setIsSavingLoading] = useState(false);
@@ -35,6 +39,21 @@ export default function Table({ data = [], columns = [] }) {
             name: record.name,
         }),
     };
+
+    const editInstance = () => {
+        const instanceIndex = rowData.findIndex(row => row.key === selectedRows[0].key);
+        const editingInstance = rowData[instanceIndex];
+        editingInstance.isEditing = true;
+        const newRowData = rowData;
+        newRowData[instanceIndex] = editingInstance;
+        setRowData(newRowData);
+        setIsEditing(true);
+        setEditingKey(editingInstance.key);
+    }
+
+    const saveInstanceEdit = () => {
+
+    }
 
     const addInstance = () => {
         const newInstance = {};
@@ -80,10 +99,14 @@ export default function Table({ data = [], columns = [] }) {
         }
     };
 
-    const undoNewInstance = () => {
-        const newRows = rowData.filter(row => !row.isAdding);
+    const undoInstanceAction = () => {
+        let newRows = rowData.filter(row => !row.isAdding);
+        newRows.forEach((row) => {
+            row.isEditing = false;
+        })
         setRowData(newRows);
         setIsAdding(false);
+        setIsEditing(false);
     };
 
     const deleteRowInstances = async () => {
@@ -149,14 +172,14 @@ export default function Table({ data = [], columns = [] }) {
         form.setFieldsValue({ [e.target.name]: e.target.value });
     };
 
-    const EditableCell = ({ isAdding, ...props }) => {
+    const EditableCell = ({ isAdding, isEditing, ...props }) => {
         const inputPlaceholder = props.col?.dataIndex === "_id" || props.col?.dataIndex === "_mod" || props.col?.dataIndex === "key" ? "auto-generated" : "";
         const isDisabled = props.col?.dataIndex === "_mod" || props.col?.dataIndex === "key";
         const isRequired = props.col?.dataIndex !== "_id" && props.col?.dataIndex !== "_mod" && props.col?.dataIndex !== "key";
         const inputNode = <Input onChange={handleCellChange} name={props.col?.dataIndex} placeholder={inputPlaceholder} disabled={isDisabled} />
         return (
             <td {...props}>
-                {props.record?.isAdding ? (
+                {props.record?.isAdding || props.record?.isEditing ? (
                     <Form.Item
                         name={props.col?.dataIndex}
                         rules={[
@@ -190,11 +213,13 @@ export default function Table({ data = [], columns = [] }) {
                     addInstance={addInstance}
                     saveNewInstance={saveNewInstance}
                     isSavingLoading={isSavingLoading}
-                    undoNewInstance={undoNewInstance}
+                    undoInstanceAction={undoInstanceAction}
                     selectedRows={selectedRows}
                     deleteRowInstances={deleteRowInstances}
                     isDeleteLoading={isDeleteLoading}
                     onSearch={onSearch}
+                    editInstance={editInstance}
+                    isEditing={isEditing}
                 />
                 <Form form={form} component={false}>
                     <AntTable dataSource={filteredRows || rowData}

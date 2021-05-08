@@ -13,11 +13,13 @@ export default function TableActions({
     addInstance,
     saveNewInstance,
     isSavingLoading,
-    undoNewInstance,
+    undoInstanceAction,
     selectedRows,
     deleteRowInstances,
     isDeleteLoading,
-    onSearch
+    onSearch,
+    editInstance,
+    isEditing
 }) {
     const [appCtxState, appCtxActions] = useContext(AppContext);
     const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
@@ -25,7 +27,7 @@ export default function TableActions({
     return (
         <div className="tableActionsBar">
             {
-                !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
+                !isAdding && !isEditing && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                 <Button
                     className="actionButton"
                     icon={<PlusOutlined />}
@@ -35,7 +37,7 @@ export default function TableActions({
                         </Button>
             }
             {
-                isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
+                (isAdding || isEditing) && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                 <Button
                     className="actionButton"
                     icon={<SaveOutlined />}
@@ -46,31 +48,38 @@ export default function TableActions({
                         </Button>
             }
             {
-                isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
+                (isAdding || isEditing) && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
                 <Button
                     className="actionButton"
                     icon={<UndoOutlined />}
-                    onClick={undoNewInstance}
+                    onClick={undoInstanceAction}
                 >
                     Undo
                         </Button>
             }
-            <Button
-                className="actionButton"
-                icon={<EditOutlined />}
-                disabled
-            >
-                Edit
-                    </Button>
-            <Button
-                className="actionButton"
-                icon={<DeleteOutlined />}
-                disabled={selectedRows?.length === 0}
-                onClick={deleteRowInstances}
-                loading={isDeleteLoading}
-            >
-                Delete
-                    </Button>
+            {
+                !isAdding && !isEditing &&
+                <Button
+                    className="actionButton"
+                    icon={<EditOutlined />}
+                    disabled={selectedRows?.length !== 1}
+                    onClick={editInstance}
+                >
+                    Edit
+                </Button>
+            }
+            {
+                !isAdding && !isEditing &&
+                <Button
+                    className="actionButton"
+                    icon={<DeleteOutlined />}
+                    disabled={selectedRows?.length === 0}
+                    onClick={deleteRowInstances}
+                    loading={isDeleteLoading}
+                >
+                    Delete
+                </Button>
+            }
             <Search
                 placeholder="search"
                 onSearch={onSearch}
