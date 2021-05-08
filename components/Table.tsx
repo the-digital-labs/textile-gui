@@ -1,14 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../styles/components/Table.css";
-import { Table as AntTable, Spin, Button, Input, Form } from "antd";
+import { Table as AntTable, Spin, Input, Form } from "antd";
 import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
-import { PlusOutlined, DeleteOutlined, EditOutlined, SaveOutlined, UndoOutlined } from "@ant-design/icons";
-import ExportButton from "./ExportButton";
 import { TextileClient, createInstances, deleteInstances } from "../textile";
 import { ThreadID } from "@textile/hub";
-
-const { Search } = Input;
+import TableActions from "./TableActions";
 
 export default function Table({ data = [], columns = [] }) {
     const [appCtxState, appCtxActions] = useContext(AppContext);
@@ -188,63 +185,17 @@ export default function Table({ data = [], columns = [] }) {
         {
             !appCtxState.isTableLoading &&
             <div>
-                <div className="tableActionsBar">
-                    {
-                        !isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button
-                            className="actionButton"
-                            icon={<PlusOutlined />}
-                            onClick={addInstance}
-                        >
-                            Add
-                        </Button>
-                    }
-                    {
-                        isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button
-                            className="actionButton"
-                            icon={<SaveOutlined />}
-                            onClick={saveNewInstance}
-                            loading={isSavingLoading}
-                        >
-                            Save
-                        </Button>
-                    }
-                    {
-                        isAdding && threadsCtxState.selectedCollection && threadsCtxState.selectedThread &&
-                        <Button
-                            className="actionButton"
-                            icon={<UndoOutlined />}
-                            onClick={undoNewInstance}
-                        >
-                            Undo
-                        </Button>
-                    }
-                    <Button
-                        className="actionButton"
-                        icon={<EditOutlined />}
-                        disabled
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                        className="actionButton"
-                        icon={<DeleteOutlined />}
-                        disabled={selectedRows?.length === 0}
-                        onClick={deleteRowInstances}
-                        loading={isDeleteLoading}
-                    >
-                        Delete
-                    </Button>
-                    <Search
-                        placeholder="search"
-                        onSearch={onSearch}
-                        onChange={(e) => onSearch(e.target.value)}
-                        style={{ width: 200, float: "right" }}
-                        disabled={!appCtxState.hubKey || !appCtxState.hubSecret}
-                    />
-                    <ExportButton style={{ float: "right", marginRight: 10 }} />
-                </div>
+                <TableActions
+                    isAdding={isAdding}
+                    addInstance={addInstance}
+                    saveNewInstance={saveNewInstance}
+                    isSavingLoading={isSavingLoading}
+                    undoNewInstance={undoNewInstance}
+                    selectedRows={selectedRows}
+                    deleteRowInstances={deleteRowInstances}
+                    isDeleteLoading={isDeleteLoading}
+                    onSearch={onSearch}
+                />
                 <Form form={form} component={false}>
                     <AntTable dataSource={filteredRows || rowData}
                         columns={mergedColumns}
