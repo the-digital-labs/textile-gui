@@ -4,7 +4,7 @@ import './styles/Home.css'
 import Table from "./components/Table";
 import TopBar from "./components/TopBar";
 import SideBar from "./components/SideBar";
-import { Row, Col } from "antd";
+import { Row, Col, notification } from "antd";
 import { ThreadsContext } from "./store/threads";
 import { AppContext } from "./store/app";
 import { TextileClient, listDBs, listCollections, getInstancesByQuery } from "./textile";
@@ -105,6 +105,13 @@ export default function Main() {
   // Retrieve localStorage and set to Redux on page load.
   useEffect(() => {
     const localStorage: Record<string, any> = getLocalStorage();
+    if (!localStorage[localStorageKeys.HUB_KEY] || !localStorage[localStorageKeys.HUB_SECRET]) {
+      notification.warning({ 
+        message: `Missing API keys!`,
+        description: "Add your Textile Hub API keys in the settings menu.",
+        placement: "bottomRight"
+      })
+    }
     appCtxActions.setHubKey(localStorage[localStorageKeys.HUB_KEY]);
     appCtxActions.setHubSecret(localStorage[localStorageKeys.HUB_SECRET]);
     appCtxActions.setIsDarkMode(localStorage[localStorageKeys.DARK_MODE] === "true");
