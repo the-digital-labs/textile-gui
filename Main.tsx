@@ -38,6 +38,7 @@ export default function Main() {
         if (collections?.length > 0) {
           let collectionsCounter = 0;
           thread.children = [];
+          collections.sort((a, b) => a.name.localeCompare(b.name));
           collections.forEach((collection, collectionIndex) => {
             collectionsCounter++;
             collection.key = `0-0-${threadIndex}-${collectionIndex}`;
@@ -106,7 +107,7 @@ export default function Main() {
   useEffect(() => {
     const localStorage: Record<string, any> = getLocalStorage();
     if (!localStorage[localStorageKeys.HUB_KEY] || !localStorage[localStorageKeys.HUB_SECRET]) {
-      notification.warning({ 
+      notification.warning({
         message: `Missing API keys!`,
         description: "Add your Textile Hub API keys in the settings menu.",
         placement: "bottomRight"
