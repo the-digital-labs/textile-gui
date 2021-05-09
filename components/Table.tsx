@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../styles/components/Table.css";
-import { Table as AntTable, Spin, Input, Form } from "antd";
+import { Table as AntTable, Spin, Input, Form, notification } from "antd";
 import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
 import { TextileClient, createInstances, deleteInstances, updateInstanceByID } from "../textile";
@@ -88,9 +88,19 @@ export default function Table({ data = [], columns = [] }) {
                 setEditingKey(null);
                 setSelectedRows([]);
                 setIsSavingLoading(false);
+                notification.success({
+                    message: `Edit successful!`,
+                    description: "Updated your selected instance.",
+                    placement: "bottomRight"
+                })
             }
         } catch (e) {
             console.error("Required fields missing!", e);
+            notification.error({
+                message: `Error editing!`,
+                description: "Missing required fields",
+                placement: "bottomRight"
+            })
             setIsSavingLoading(false);
         }
     };
@@ -132,9 +142,19 @@ export default function Table({ data = [], columns = [] }) {
                 setIsAdding(false);
                 setAddingKey(null);
                 setIsSavingLoading(false);
+                notification.success({
+                    message: `New instance created!`,
+                    description: "Successfully saved your new instance.",
+                    placement: "bottomRight"
+                })
             }
         } catch (e) {
             console.error("Required fields missing!", e);
+            notification.error({
+                message: `Error creating instance!`,
+                description: "Missing required fields",
+                placement: "bottomRight"
+            })
             setIsSavingLoading(false);
         }
     };
@@ -166,6 +186,11 @@ export default function Table({ data = [], columns = [] }) {
         setRowData(rowData.filter(row => !IDs.includes(row._id)));
         setSelectedRows([]);
         setIsDeleteLoading(false);
+        notification.success({
+            message: `Deleted instance!`,
+            description: "Removed your selected instance.",
+            placement: "bottomRight"
+        })
     };
 
     const onSearch = (searchQuery) => {
