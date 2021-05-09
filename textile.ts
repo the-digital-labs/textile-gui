@@ -59,17 +59,16 @@ export async function getInstancesByQuery<T>(client: Client, threadID: ThreadID,
     return instances;
 };
 
-export async function updateInstanceByID(client: Client, dbName: string, collectionName: string, id: string, newValues: object): Promise<void> {
-    const dbs = await listDBs(client);
-    const selectedDB = dbs.find(db => db.name === dbName);
+export async function updateInstanceByID(client: Client, threadID: ThreadID, collectionName: string, id: string, newValues: object): Promise<boolean> {
     const query = new Query().seekID(id);
-    const result: object[] = await client.find(ThreadID.fromString(selectedDB.id), collectionName, query);
+    const result: object[] = await client.find(threadID, collectionName, query);
     if (result.length < 1) {
         console.log("updateInstanceByID() Instance not found.");
-        return;
+        return false;
     } else {
         const instance = { ...result[0], ...newValues };
-        return await client.save(ThreadID.fromString(selectedDB.id), collectionName, [instance]);
+        await client.save(threadID, collectionName, [instance]);
+        return true;
     }
 };
 

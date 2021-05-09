@@ -19,7 +19,8 @@ export default function TableActions({
     isDeleteLoading,
     onSearch,
     editInstance,
-    isEditing
+    isEditing,
+    saveInstanceEdit
 }) {
     const [appCtxState, appCtxActions] = useContext(AppContext);
     const [threadsCtxState, threadsCtxActions] = useContext(ThreadsContext);
@@ -41,7 +42,7 @@ export default function TableActions({
                 <Button
                     className="actionButton"
                     icon={<SaveOutlined />}
-                    onClick={saveNewInstance}
+                    onClick={isAdding && !isEditing ? saveNewInstance : isEditing && !isAdding ? saveInstanceEdit : null}
                     loading={isSavingLoading}
                 >
                     Save

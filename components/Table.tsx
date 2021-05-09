@@ -3,7 +3,7 @@ import "../styles/components/Table.css";
 import { Table as AntTable, Spin, Input, Form } from "antd";
 import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
-import { TextileClient, createInstances, deleteInstances } from "../textile";
+import { TextileClient, createInstances, deleteInstances, updateInstanceByID } from "../textile";
 import { ThreadID } from "@textile/hub";
 import TableActions from "./TableActions";
 
@@ -46,14 +46,54 @@ export default function Table({ data = [], columns = [] }) {
         editingInstance.isEditing = true;
         const newRowData = rowData;
         newRowData[instanceIndex] = editingInstance;
+        form.setFieldsValue(selectedRows[0]);
         setRowData(newRowData);
         setIsEditing(true);
         setEditingKey(editingInstance.key);
-    }
+    };
 
-    const saveInstanceEdit = () => {
-
-    }
+    const saveInstanceEdit = async () => {
+        try {
+            setIsSavingLoading(true);
+            await form.validateFields();
+            const newInstance = form.getFieldsValue(true);
+            const client = await new TextileClient().init({
+                key: appCtxState.hubKey,
+                secret: appCtxState.hubSecret
+            });
+            if (!client) return;
+            let typedInstance = {};
+            Object.entries(newInstance).forEach(([key, value]) => {
+                if (value.toString().substring(0, 1) === "{") {
+                    typedInstance[key] = JSON.parse(value.toString());
+                } else {
+                    typedInstance[key] = value;
+                }
+            });
+            delete typedInstance.isEditing;
+            delete typedInstance.key;
+            const instanceResp = await updateInstanceByID(
+                client,
+                ThreadID.fromString(threadsCtxState.selectedThread.id),
+                threadsCtxState.selectedCollection.name,
+                newInstance._id,
+                typedInstance
+            );
+            if (instanceResp) {
+                const instanceIndex = rowData.findIndex(row => row.key === newInstance.key);
+                const newRowData = rowData;
+                newRowData[instanceIndex] = newInstance;
+                setRowData(newRowData);
+                setIsEditing(false);
+                setEditingKey(null);
+                setSelectedRows([]);
+                setIsSavingLoading(false);
+            }
+        } catch (e) {
+            console.error("Required fields missing!", e);
+            setIsSavingLoading(false);
+        }
+    };
 
     const addInstance = () => {
         const newInstance = {};
@@ -220,6 +260,7 @@ export default function Table({ data = [], columns = [] }) {
                     onSearch={onSearch}
                     editInstance={editInstance}
                     isEditing={isEditing}
+                    saveInstanceEdit={saveInstanceEdit}
                 />
                 <Form form={form} component={false}>
                     <AntTable dataSource={filteredRows || rowData}
