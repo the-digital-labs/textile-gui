@@ -13,6 +13,7 @@ export default function SettingsForm(props) {
         window.localStorage.setItem("HUB_SECRET", values.hubSecret);
         appCtxActions.setHubKey(values.hubKey);
         appCtxActions.setHubSecret(values.hubSecret);
+        appCtxActions.setIsSettingsOpen(false);
     };
 
     useEffect(() => {
