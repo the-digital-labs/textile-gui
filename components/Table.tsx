@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../styles/components/Table.css";
-import { Table as AntTable, Spin, Input, Form, notification } from "antd";
+import { Table as AntTable, Spin, Input, Form, notification, InputNumber } from "antd";
 import { AppContext } from "../store/app";
 import { ThreadsContext } from "../store/threads";
 import { TextileClient, createInstances, deleteInstances, updateInstanceByID } from "../textile";
@@ -220,6 +220,7 @@ export default function Table({ data = [], columns = [] }) {
                 }
             })
         })
+        console.log(threadsCtxState.selectedCollection);
     }, [data])
 
     const mergedColumns = columns.map((col) => {
@@ -233,15 +234,24 @@ export default function Table({ data = [], columns = [] }) {
         };
     });
 
-    const handleCellChange = (e) => {
-        form.setFieldsValue({ [e.target.name]: e.target.value });
+    const handleCellChange = (name, value) => {
+        form.setFieldsValue({ [name]: value });
     };
 
     const EditableCell = ({ isAdding, isEditing, ...props }) => {
         const inputPlaceholder = props.col?.dataIndex === "_id" || props.col?.dataIndex === "_mod" || props.col?.dataIndex === "key" ? "auto-generated" : "";
         const isDisabled = props.col?.dataIndex === "_mod" || props.col?.dataIndex === "key";
         const isRequired = props.col?.dataIndex !== "_id" && props.col?.dataIndex !== "_mod" && props.col?.dataIndex !== "key";
-        const inputNode = <Input onChange={handleCellChange} name={props.col?.dataIndex} placeholder={inputPlaceholder} disabled={isDisabled} />
+        const getInputNode = () => {
+            switch (threadsCtxState.selectedCollection.collectionInfo?.schema?.properties?.[props.col?.dataIndex]?.type) {
+                case "integer":
+                    return <InputNumber onChange={(e) => handleCellChange(props.col?.dataIndex, e)} name={props.col?.dataIndex} placeholder={inputPlaceholder} disabled={isDisabled} />;
+                case "string":
+                    return <Input onChange={(e) => handleCellChange(props.col?.dataIndex, e.target.value)} name={props.col?.dataIndex} placeholder={inputPlaceholder} disabled={isDisabled} />;
+                default:
+                    return <Input onChange={(e) => handleCellChange(props.col?.dataIndex, e.target.value)} name={props.col?.dataIndex} placeholder={inputPlaceholder} disabled={isDisabled} />;
+            };
+        };
         return (
             <td {...props}>
                 {props.record?.isAdding || props.record?.isEditing ? (
@@ -254,7 +264,7 @@ export default function Table({ data = [], columns = [] }) {
                             },
                         ]}
                     >
-                        {inputNode}
+                        {getInputNode()}
                     </Form.Item>
                 ) : (
                     props.children

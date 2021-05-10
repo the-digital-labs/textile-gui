@@ -7,7 +7,7 @@ import SideBar from "./components/SideBar";
 import { Row, Col, notification } from "antd";
 import { ThreadsContext } from "./store/threads";
 import { AppContext } from "./store/app";
-import { TextileClient, listDBs, listCollections, getInstancesByQuery } from "./textile";
+import { TextileClient, listDBs, listCollections, getInstancesByQuery, getCollectionInfo } from "./textile";
 import { ThreadID, Query, Client } from "@textile/hub";
 import { getLocalStorage } from "./helpers";
 import { localStorageKeys } from "./constants";
@@ -39,10 +39,11 @@ export default function Main() {
           let collectionsCounter = 0;
           thread.children = [];
           collections.sort((a, b) => a.name.localeCompare(b.name));
-          collections.forEach((collection, collectionIndex) => {
+          collections.forEach(async (collection, collectionIndex) => {
             collectionsCounter++;
             collection.key = `0-0-${threadIndex}-${collectionIndex}`;
             collection.title = collection.name;
+            collection.collectionInfo = await getCollectionInfo(client, ThreadID.fromString(thread.id), collection.name);
             collection.onClick = () => {
               fetchInstances(thread.id, collection.name);
               threadsCtxActions.setSelectedCollection(collection);
@@ -87,17 +88,17 @@ export default function Main() {
   // Used to dynamically parse column headers from instances.
   function getColumns(instances: Array<Record<string, any>>): Array<Record<string, any>> {
     let columns: Array<Record<string, any>> = [];
-    let columnTypes: Record<string, any> = {};
+    let columnHeaders: Record<string, any> = {};
     instances.forEach((instance: Record<string, any>) => {
-      columnTypes = { ...columnTypes, ...Object.keys(instance) };
+      columnHeaders = { ...columnHeaders, ...Object.keys(instance) };
     });
-    Object.values(columnTypes).forEach((type: string, index: number) => {
+    Object.values(columnHeaders).forEach((header: string, index: number) => {
       columns.push({
-        title: type,
-        dataIndex: type,
+        title: header,
+        dataIndex: header,
         key: index,
         ellipsis: true,
-        sorter: (a, b) => a[type].toString().localeCompare(b[type].toString()),
+        sorter: (a, b) => a[header].toString().localeCompare(b[header].toString()),
       });
     })
     return columns;
