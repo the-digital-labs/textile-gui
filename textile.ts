@@ -1,4 +1,4 @@
-import { Client, GetThreadResponse, ThreadID, QueryJSON, Query } from "@textile/hub";
+import { Client, GetThreadResponse, ThreadID, QueryJSON, Query, CollectionConfig } from "@textile/hub";
 import * as pb from "@textile/threads-client-grpc/threads_pb";
 
 interface KeyInfoInterface {
@@ -76,6 +76,10 @@ export async function updateCollection(client: Client, dbName: string, collectio
     const dbs = await listDBs(client);
     const selectedDB = dbs.find(db => db.name === dbName);
     return await client.updateCollection(ThreadID.fromString(selectedDB.id), { name: collectionName, schema: schema });
+};
+
+export async function getCollectionInfo(client: Client, threadID: ThreadID, collectionName: string): Promise<CollectionConfig> {
+    return await client.getCollectionInfo(threadID, collectionName);
 };
 
 export class TextileClient {
